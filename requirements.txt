@@ -1,0 +1,4 @@
+requests>=2.31
+beautifulsoup4>=4.12
+python-docx>=1.1
+fpdf2>=2.7.8

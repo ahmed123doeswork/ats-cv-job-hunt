@@ -1,0 +1,8 @@
+# Each person's own CV, search settings and saved jobs
+data/
+assets/
+
+# Local Python environment created by Start Job Hunt.bat
+.venv/
+__pycache__/
+*.pyc

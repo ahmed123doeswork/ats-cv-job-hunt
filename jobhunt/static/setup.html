@@ -1,0 +1,1680 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Job Hunt Setup</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='14' fill='none' stroke='%23e3e6ea' stroke-width='5'/%3E%3Ccircle cx='18' cy='18' r='14' fill='none' stroke='%230B6E99' stroke-width='5' stroke-linecap='round' stroke-dasharray='88' stroke-dashoffset='22' transform='rotate(-90 18 18)'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --paper: #F3F4F6; --surface: #FFFFFF; --raised: #FFFFFF;
+    --ink: #15171C; --ink-2: #464C5A; --ink-3: #6B7180;
+    --hair: rgba(21, 23, 28, .09); --hair-strong: rgba(21, 23, 28, .18);
+    --accent: #0B6E99; --accent-ink: #FFFFFF; --accent-wash: rgba(11, 110, 153, .10); --accent-line: rgba(11, 110, 153, .45);
+    --good: #1E8A57; --good-wash: rgba(30, 138, 87, .12);
+    --warn: #B4541A; --warn-wash: rgba(180, 84, 26, .11);
+    --bad: #C23A2B;
+    --low: #A3A8B3;
+    --bar: rgba(243, 244, 246, .78);
+    --sheet-shadow: 0 24px 64px rgba(15, 20, 30, .16), 0 2px 8px rgba(15, 20, 30, .07);
+    --card-shadow: 0 1px 2px rgba(15, 20, 30, .06), 0 0 0 1px var(--hair);
+    --row-hover: rgba(21, 23, 28, .04);
+    --radius-s: 6px; --radius-m: 10px; --radius-l: 16px;
+    --spring: cubic-bezier(.32, .72, 0, 1);
+    --display: "Segoe UI Variable Display", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #15181D; --surface: #1B1F25; --raised: #22272E;
+      --ink: #ECEEF2; --ink-2: #B8BDC8; --ink-3: #8D93A2;
+      --hair: rgba(255, 255, 255, .08); --hair-strong: rgba(255, 255, 255, .17);
+      --accent: #56B6E0; --accent-ink: #062330; --accent-wash: rgba(86, 182, 224, .14); --accent-line: rgba(86, 182, 224, .5);
+      --good: #4CC38A; --good-wash: rgba(76, 195, 138, .14);
+      --warn: #F0A060; --warn-wash: rgba(240, 160, 96, .13);
+      --bad: #FF7A6B;
+      --low: #5E6472;
+      --bar: rgba(21, 24, 29, .78);
+      --sheet-shadow: 0 24px 64px rgba(0, 0, 0, .5), 0 2px 8px rgba(0, 0, 0, .3);
+      --card-shadow: 0 0 0 1px var(--hair);
+      --row-hover: rgba(255, 255, 255, .04);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-padding-top: 5rem; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink); min-height: 100vh;
+    font: 100%/1.5 "Segoe UI Variable Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; background: none; border: 0; padding: 0; }
+  button:disabled { cursor: not-allowed; }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius-s); }
+  svg.i { width: 1.05rem; height: 1.05rem; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8;
+          stroke-linecap: round; stroke-linejoin: round; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* ---------- Top bar: translucent floating layer ---------- */
+  .bar {
+    position: sticky; top: 0; z-index: 20; height: 3.75rem; display: flex; align-items: center; gap: 1rem;
+    padding: 0 1.25rem; background: var(--bar); backdrop-filter: blur(20px) saturate(170%);
+    border-bottom: 1px solid var(--hair);
+  }
+  .logo { display: flex; align-items: center; gap: .55rem; font: 650 1.05rem/1 var(--display); letter-spacing: -.01em; text-decoration: none; color: var(--ink); }
+  .logo svg { width: 1.6rem; height: 1.6rem; }
+  .phases { display: flex; align-items: center; gap: .35rem; margin: 0 auto; list-style: none; padding: 0; }
+  .phases li { display: flex; align-items: center; gap: .35rem; }
+  .phases li + li::before { content: ""; width: 2rem; height: 1px; background: var(--hair-strong); }
+  .phase { display: flex; align-items: center; gap: .5rem; padding: .35rem .7rem .35rem .4rem; border-radius: 99px; font-size: .86rem; color: var(--ink-3); white-space: nowrap; }
+  h1[tabindex="-1"]:focus { outline: none; }
+  .phase .n { width: 1.5rem; height: 1.5rem; border-radius: 50%; display: grid; place-items: center; font-size: .75rem; font-weight: 650; background: var(--hair); color: var(--ink-2); }
+  .phase[aria-current="step"] { color: var(--ink); font-weight: 600; background: var(--surface); box-shadow: var(--card-shadow); }
+  .phase[aria-current="step"] .n { background: var(--accent); color: var(--accent-ink); }
+  .phase.done .n { background: var(--good); color: #fff; }
+  .phase.done .n svg { width: .8rem; height: .8rem; stroke-width: 3; }
+  .bar-right { display: flex; align-items: center; gap: .75rem; }
+  .save-state { display: flex; align-items: center; gap: .35rem; font-size: .8rem; color: var(--ink-3); white-space: nowrap; }
+  .save-state svg { width: .9rem; height: .9rem; }
+  .save-state.err { color: var(--bad); }
+  .save-state.dirty { color: var(--warn); }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .6rem 1.05rem; border-radius: var(--radius-m);
+    font-weight: 600; font-size: .92rem; min-height: 2.75rem; text-decoration: none; white-space: nowrap;
+    transition: transform 100ms ease-out, background-color 120ms ease, filter 120ms ease, box-shadow 120ms ease;
+  }
+  .btn:active:not(:disabled) { transform: scale(.97); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover:not(:disabled) { filter: brightness(1.07); }
+  .btn.primary:disabled { filter: saturate(.5) opacity(.7); }
+  .btn.quiet { background: var(--surface); color: var(--ink); box-shadow: var(--card-shadow); }
+  .btn.quiet:hover { background: var(--raised); box-shadow: 0 0 0 1px var(--hair-strong); }
+  .btn.ghost { color: var(--ink-2); }
+  .btn.ghost:hover { background: var(--row-hover); color: var(--ink); }
+  .btn.big { min-height: 3.25rem; padding: .8rem 1.5rem; font-size: 1rem; border-radius: 12px; }
+  .btn .spin { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .icon-btn { width: 2.25rem; height: 2.25rem; border-radius: var(--radius-s); display: inline-grid; place-items: center; color: var(--ink-3); transition: background-color 120ms ease, color 120ms ease; }
+  .icon-btn:hover { background: var(--row-hover); color: var(--ink); }
+  .icon-btn.danger:hover { color: var(--bad); }
+  .icon-btn:disabled { opacity: .35; pointer-events: none; }
+  .link { color: var(--accent); font-weight: 600; font-size: .88rem; display: inline-flex; align-items: center; gap: .3rem; }
+  .link:hover { text-decoration: underline; }
+
+  /* ---------- Welcome ---------- */
+  .welcome { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 3rem; align-items: center;
+             max-width: 72rem; margin: 0 auto; padding: 4.5rem 2rem 4rem; min-height: calc(100vh - 3.75rem); }
+  .welcome h1 { font: 700 clamp(2.3rem, 4.6vw, 3.6rem)/1.04 var(--display); letter-spacing: -.035em; margin: 0 0 1.1rem; text-wrap: balance; }
+  .welcome .lead { font-size: 1.12rem; color: var(--ink-2); max-width: 34rem; margin: 0 0 2rem; text-wrap: pretty; }
+  .howto { list-style: none; padding: 0; margin: 0 0 2.25rem; display: grid; gap: .9rem; max-width: 30rem; }
+  .howto li { display: grid; grid-template-columns: 2.75rem 1fr; gap: .9rem; align-items: center; }
+  .howto b { display: block; font-weight: 600; }
+  .howto span { font-size: .88rem; color: var(--ink-3); }
+  .tile { width: 2.75rem; height: 2.75rem; border-radius: 12px; display: grid; place-items: center; background: var(--accent-wash); color: var(--accent); position: relative; }
+  .tile svg.i { width: 1.3rem; height: 1.3rem; }
+  .howto .tile em { position: absolute; top: -.35rem; right: -.35rem; width: 1.15rem; height: 1.15rem; border-radius: 50%; background: var(--surface);
+                    box-shadow: var(--card-shadow); font: 650 .68rem/1.15rem system-ui; font-style: normal; text-align: center; color: var(--ink-2); }
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+  .privacy { display: flex; gap: .55rem; align-items: flex-start; margin-top: 1.6rem; font-size: .84rem; color: var(--ink-3); max-width: 30rem; }
+  .privacy svg { margin-top: .15rem; color: var(--good); }
+
+  /* Hero art: a CV page and the matches it produces */
+  .art { position: relative; height: 30rem; }
+  .art-paper {
+    position: absolute; left: 6%; top: 1rem; width: 62%; aspect-ratio: 1 / 1.414; background: #fff; border-radius: 6px;
+    box-shadow: var(--sheet-shadow); padding: 9% 9%; transform: rotate(-4deg);
+  }
+  .art-paper i { display: block; height: .5rem; border-radius: 3px; background: #E3E6EB; margin-bottom: .55rem; }
+  .art-paper i.nm { height: 1.05rem; width: 58%; background: #1D2129; margin-bottom: .6rem; }
+  .art-paper i.hd { height: .55rem; width: 30%; background: #0B6E99; margin-top: 1.15rem; }
+  .art-paper i.w9 { width: 92%; } .art-paper i.w7 { width: 72%; } .art-paper i.w5 { width: 52%; } .art-paper i.w4 { width: 40%; }
+  .art-cards { position: absolute; right: 0; top: 4.5rem; width: 64%; display: grid; gap: .7rem; }
+  .art-card {
+    display: grid; grid-template-columns: 2.6rem 1fr; gap: .8rem; align-items: center; padding: .85rem 1rem; border-radius: 14px;
+    background: var(--surface); box-shadow: var(--sheet-shadow);
+    animation: card-in 700ms var(--spring) both; animation-delay: calc(var(--d) * 120ms + 250ms);
+  }
+  .art-card:nth-child(2) { margin-left: 1.5rem; } .art-card:nth-child(3) { margin-left: .5rem; }
+  .art-card b { display: block; font-size: .92rem; }
+  .art-card span { font-size: .8rem; color: var(--ink-3); }
+  @keyframes card-in { from { opacity: 0; transform: translateX(2.5rem) scale(.96); } }
+
+  /* ---------- Builder shell ---------- */
+  .shell { display: grid; grid-template-columns: 14.5rem minmax(0, 1fr) minmax(22rem, 32rem); min-height: calc(100vh - 3.75rem); }
+  .shell.no-aside { grid-template-columns: 14.5rem minmax(0, 1fr); }
+
+  .rail { padding: 1.5rem .75rem; border-right: 1px solid var(--hair); }
+  .rail-inner { position: sticky; top: 5.25rem; }
+  .rail h2 { font-size: .78rem; font-weight: 600; color: var(--ink-3); margin: 0 .6rem .6rem; letter-spacing: .01em; }
+  .rail ol { list-style: none; padding: 0; margin: 0; display: grid; gap: .1rem; }
+  .rail a {
+    display: flex; align-items: center; gap: .65rem; padding: .5rem .6rem; border-radius: var(--radius-m); text-decoration: none;
+    color: var(--ink-2); font-size: .9rem; transition: background-color 120ms ease, transform 100ms ease-out;
+  }
+  .rail a:hover { background: var(--row-hover); }
+  .rail a:active { transform: scale(.98); }
+  .rail a[aria-current="step"] { background: var(--surface); color: var(--ink); font-weight: 600; box-shadow: var(--card-shadow); }
+  .rail a[aria-current="step"] .st { color: var(--accent); }
+  .rail .st { width: 1.75rem; height: 1.75rem; border-radius: 8px; display: grid; place-items: center; color: var(--ink-3); flex: none; }
+  .rail .ok { margin-left: auto; color: var(--good); }
+  .rail .ok svg { width: .95rem; height: .95rem; stroke-width: 2.4; }
+  .rail .opt { margin-left: auto; font-size: .72rem; color: var(--ink-3); }
+  .rail-progress { margin: 1.25rem .6rem 0; font-size: .78rem; color: var(--ink-3); }
+  .meter { height: 4px; border-radius: 99px; background: var(--hair); margin-top: .4rem; overflow: hidden; }
+  .meter b { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width 500ms var(--spring); }
+
+  .main { min-width: 0; padding: 2.25rem clamp(1.25rem, 3.5vw, 3rem) 0; display: flex; flex-direction: column; }
+  .step { max-width: 40rem; width: 100%; flex: 1; }
+  .step.enter { animation: step-in 440ms var(--spring) both; }
+  .step.enter.back { animation-name: step-in-back; }
+  @keyframes step-in { from { opacity: 0; transform: translateX(1.75rem); } }
+  @keyframes step-in-back { from { opacity: 0; transform: translateX(-1.75rem); } }
+  .step-head { display: grid; grid-template-columns: 3.25rem 1fr; gap: 1rem; align-items: start; margin-bottom: 1.75rem; }
+  .step-head .tile { width: 3.25rem; height: 3.25rem; border-radius: 14px; }
+  .step-head .tile svg.i { width: 1.5rem; height: 1.5rem; }
+  .step-head .count { font-size: .8rem; color: var(--ink-3); font-weight: 500; }
+  .step-head h1 { font: 680 1.85rem/1.12 var(--display); letter-spacing: -.025em; margin: .05rem 0 .4rem; text-wrap: balance; }
+  .step-head p { margin: 0; color: var(--ink-2); max-width: 36rem; text-wrap: pretty; }
+
+  .foot {
+    position: sticky; bottom: 0; z-index: 5; max-width: 40rem; display: flex; align-items: center; gap: .75rem;
+    padding: 1rem 0 1.25rem; margin-top: 2rem; background: linear-gradient(transparent, var(--paper) 30%);
+  }
+  .foot .spacer { flex: 1; }
+  .foot .skip-note { font-size: .82rem; color: var(--ink-3); }
+
+  /* ---------- Fields ---------- */
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1rem; }
+  .span2 { grid-column: 1 / -1; }
+  .field { display: flex; flex-direction: column; gap: .35rem; min-width: 0; }
+  .field label, .label { font-size: .86rem; font-weight: 600; color: var(--ink); }
+  .req { color: var(--accent); }
+  .opt-tag { font-weight: 400; color: var(--ink-3); }
+  .input, .field input, .field select, .field textarea {
+    width: 100%; background: var(--surface); border: 1px solid var(--hair-strong); border-radius: var(--radius-m);
+    padding: .62rem .8rem; font-size: .95rem; min-height: 2.75rem; transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .field textarea { resize: vertical; line-height: 1.55; min-height: 7rem; }
+  .field input:focus, .field select:focus, .field textarea:focus, .input:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-wash);
+  }
+  .field input:disabled { opacity: .5; }
+  .field [aria-invalid="true"] { border-color: var(--bad); box-shadow: 0 0 0 3px color-mix(in srgb, var(--bad) 14%, transparent); }
+  .hint { margin: 0; font-size: .8rem; color: var(--ink-3); }
+  .err { margin: 0; font-size: .8rem; color: var(--bad); display: flex; gap: .3rem; align-items: center; }
+  .err svg { width: .9rem; height: .9rem; }
+  .check-row { display: flex; align-items: center; gap: .55rem; font-size: .9rem; color: var(--ink-2); min-height: 2.75rem; cursor: pointer; }
+  .check-row input { width: 1.1rem; height: 1.1rem; accent-color: var(--accent); }
+  .section-label { display: flex; align-items: center; gap: .5rem; font: 650 1.02rem/1.3 var(--display); margin: 2rem 0 .3rem; }
+  .section-label svg { color: var(--accent); }
+  .section-label + .hint { margin-bottom: .8rem; }
+  .counter { font-size: .8rem; color: var(--ink-3); display: flex; justify-content: space-between; gap: 1rem; }
+  .counter .good { color: var(--good); font-weight: 600; }
+  .counter .warn { color: var(--warn); font-weight: 600; }
+
+  /* Repeatable entries */
+  .items { display: grid; gap: .9rem; }
+  details.item { background: var(--surface); border-radius: var(--radius-l); box-shadow: var(--card-shadow); }
+  details.item > summary {
+    list-style: none; display: flex; align-items: center; gap: .75rem; padding: .8rem .8rem .8rem 1rem; cursor: pointer; border-radius: var(--radius-l);
+  }
+  details.item > summary::-webkit-details-marker { display: none; }
+  details.item > summary:hover { background: var(--row-hover); }
+  .item-title { min-width: 0; flex: 1; }
+  .item-title b { display: block; font-size: .95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item-title span { font-size: .8rem; color: var(--ink-3); }
+  .chev { transition: transform 250ms var(--spring); color: var(--ink-3); }
+  details[open] > summary .chev { transform: rotate(180deg); }
+  .item-body { padding: .4rem 1rem 1.1rem; }
+  .item-tools { display: flex; gap: .1rem; }
+  .add-btn {
+    display: flex; align-items: center; justify-content: center; gap: .5rem; width: 100%; min-height: 3rem; border-radius: var(--radius-l);
+    border: 1.5px dashed var(--hair-strong); color: var(--accent); font-weight: 600; font-size: .92rem;
+    transition: background-color 120ms ease, border-color 120ms ease, transform 100ms ease-out;
+  }
+  .add-btn:hover { background: var(--accent-wash); border-color: var(--accent-line); }
+  .add-btn:active { transform: scale(.99); }
+  .row-list { display: grid; gap: .6rem; margin-bottom: .7rem; }
+  .mini-row { display: grid; gap: .6rem; align-items: end; background: var(--surface); padding: .75rem; border-radius: var(--radius-m); box-shadow: var(--card-shadow); }
+  .mini-row.c3 { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 9.5rem auto; }
+  .mini-row.c2 { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto; }
+  .mini-row .field label { font-size: .78rem; font-weight: 500; color: var(--ink-3); }
+
+  .empty-card { text-align: center; padding: 2.25rem 1.5rem; background: var(--surface); border-radius: var(--radius-l); box-shadow: var(--card-shadow); margin-bottom: .9rem; }
+  .empty-card .tile { margin: 0 auto .8rem; }
+  .empty-card h3 { margin: 0 0 .3rem; font-size: 1.02rem; }
+  .empty-card p { margin: 0 auto 1.1rem; max-width: 26rem; color: var(--ink-2); font-size: .9rem; }
+
+  .lint { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .1rem; }
+  .pill { display: inline-flex; align-items: center; gap: .3rem; font-size: .76rem; font-weight: 500; padding: .14rem .55rem; border-radius: 99px; background: var(--paper); color: var(--ink-2); }
+  .pill svg.i { width: .8rem; height: .8rem; }
+  .pill.good { background: var(--good-wash); color: var(--good); }
+  .pill.warn { background: var(--warn-wash); color: var(--warn); }
+
+  .tips { list-style: none; padding: 1rem 1.1rem; margin: 1.25rem 0 0; background: var(--surface); border-radius: var(--radius-l); box-shadow: var(--card-shadow); display: grid; gap: .55rem; }
+  .tips li { display: flex; gap: .6rem; font-size: .88rem; color: var(--ink-2); }
+  .tips li svg { color: var(--accent); margin-top: .15rem; }
+  .tips h3 { margin: 0 0 .1rem; font-size: .85rem; }
+
+  /* Chips */
+  .chipbox {
+    display: flex; flex-wrap: wrap; gap: .4rem; align-items: center; padding: .45rem; min-height: 3rem;
+    background: var(--surface); border: 1px solid var(--hair-strong); border-radius: var(--radius-m); cursor: text;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .chipbox:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-wash); }
+  .chipbox[aria-invalid="true"] { border-color: var(--bad); }
+  .chipbox input { flex: 1 1 10rem; min-width: 8rem; border: 0; outline: none; background: none; padding: .35rem .35rem; font-size: .93rem; }
+  .chip { display: inline-flex; align-items: center; gap: .2rem; padding: .25rem .3rem .25rem .7rem; border-radius: 99px;
+          background: var(--accent-wash); color: var(--ink); font-size: .86rem; font-weight: 500; animation: pop 260ms var(--spring); }
+  .chip button { width: 1.5rem; height: 1.5rem; border-radius: 50%; display: grid; place-items: center; color: var(--ink-3); }
+  .chip button:hover { background: var(--hair); color: var(--ink); }
+  .chip button svg { width: .8rem; height: .8rem; }
+  .chip.neg { background: var(--warn-wash); }
+  @keyframes pop { from { transform: scale(.85); opacity: 0; } }
+  .suggest { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .65rem; }
+  .suggest-label { font-size: .78rem; color: var(--ink-3); margin: .9rem 0 0; }
+  .sug {
+    display: inline-flex; align-items: center; gap: .3rem; padding: .3rem .7rem .3rem .5rem; border-radius: 99px; font-size: .84rem; min-height: 2rem;
+    border: 1px solid var(--hair-strong); color: var(--ink-2); background: var(--surface); transition: background-color 120ms ease, border-color 120ms ease, transform 100ms ease-out;
+  }
+  .sug svg { width: .85rem; height: .85rem; color: var(--accent); }
+  .sug:hover { border-color: var(--accent-line); color: var(--ink); }
+  .sug:active { transform: scale(.95); }
+
+  .fields-tabs { display: flex; gap: .35rem; overflow-x: auto; padding: .15rem .1rem .5rem; margin-top: .5rem; scrollbar-width: thin; }
+  .ftab { display: inline-flex; align-items: center; gap: .4rem; padding: .4rem .75rem; border-radius: 99px; font-size: .84rem; color: var(--ink-2); white-space: nowrap;
+          background: var(--surface); box-shadow: var(--card-shadow); transition: background-color 120ms ease, color 120ms ease; min-height: 2.25rem; }
+  .ftab svg { width: .95rem; height: .95rem; }
+  .ftab[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: none; }
+
+  /* Choice cards */
+  .choices { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr)); }
+  .choice {
+    position: relative; text-align: left; display: flex; flex-direction: column; gap: .55rem; padding: 1rem 1rem 1.05rem; border-radius: var(--radius-l);
+    background: var(--surface); box-shadow: var(--card-shadow); transition: box-shadow 150ms ease, transform 100ms ease-out, background-color 150ms ease;
+  }
+  .choice:hover { box-shadow: 0 0 0 1px var(--hair-strong), 0 4px 14px rgba(15, 20, 30, .06); }
+  .choice:active { transform: scale(.98); }
+  .choice .tile { width: 2.5rem; height: 2.5rem; border-radius: 11px; background: var(--paper); color: var(--ink-2); transition: background-color 150ms ease, color 150ms ease; }
+  .choice b { font-size: .97rem; }
+  .choice span { font-size: .82rem; color: var(--ink-3); line-height: 1.4; }
+  .choice .tick { position: absolute; top: .8rem; right: .8rem; width: 1.35rem; height: 1.35rem; border-radius: 50%; border: 1.5px solid var(--hair-strong); display: grid; place-items: center; color: transparent; transition: all 200ms var(--spring); }
+  .choice .tick svg { width: .8rem; height: .8rem; stroke-width: 3; }
+  .choice[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--accent); background: color-mix(in srgb, var(--accent) 4%, var(--surface)); }
+  .choice[aria-pressed="true"] .tile { background: var(--accent); color: var(--accent-ink); }
+  .choice[aria-pressed="true"] .tick { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); transform: scale(1.05); }
+  .choice:disabled { opacity: .5; }
+
+  .toggles { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .tog { display: inline-flex; align-items: center; gap: .4rem; padding: .45rem .9rem; border-radius: 99px; font-size: .88rem; min-height: 2.5rem;
+         background: var(--surface); box-shadow: var(--card-shadow); color: var(--ink-2); transition: background-color 120ms ease, color 120ms ease, transform 100ms ease-out; }
+  .tog:active { transform: scale(.96); }
+  .tog svg { width: .95rem; height: .95rem; }
+  .tog[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: none; font-weight: 600; }
+
+  .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--hair); border-radius: 10px; padding: 3px; max-width: 30rem; }
+  .seg button { padding: .5rem .6rem; border-radius: 8px; font-size: .88rem; color: var(--ink-2); min-height: 2.5rem; transition: background-color 150ms ease, color 150ms ease; }
+  .seg button[aria-pressed="true"] { background: var(--raised); color: var(--ink); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.14); }
+  .seg-desc { font-size: .82rem; color: var(--ink-3); margin: .5rem 0 0; }
+
+  /* ---------- Review lists ---------- */
+  .ats-hero { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: center; padding: 1.25rem; background: var(--surface); border-radius: var(--radius-l); box-shadow: var(--card-shadow); }
+  .ats-hero h2 { margin: 0 0 .2rem; font: 650 1.2rem/1.25 var(--display); letter-spacing: -.01em; }
+  .ats-hero p { margin: 0; color: var(--ink-2); font-size: .9rem; }
+  .checks { list-style: none; margin: 1rem 0 0; padding: 0; background: var(--surface); border-radius: var(--radius-l); box-shadow: var(--card-shadow); }
+  .checks li { display: grid; grid-template-columns: 1.4rem 1fr auto; gap: .75rem; align-items: center; padding: .75rem 1rem; }
+  .checks li + li { border-top: 1px solid var(--hair); }
+  .checks li > svg { width: 1.2rem; height: 1.2rem; }
+  .checks .y { color: var(--good); } .checks .n { color: var(--warn); }
+  .checks b { font-size: .9rem; font-weight: 600; display: block; }
+  .checks span { font-size: .8rem; color: var(--ink-3); }
+  .downloads { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.25rem; }
+
+  .summary-list { list-style: none; margin: 0; padding: 0; background: var(--surface); border-radius: var(--radius-l); box-shadow: var(--card-shadow); }
+  .summary-list li { display: grid; grid-template-columns: 2.5rem 1fr auto; gap: .9rem; align-items: center; padding: .85rem 1rem; }
+  .summary-list li + li { border-top: 1px solid var(--hair); }
+  .summary-list .tile { width: 2.5rem; height: 2.5rem; border-radius: 11px; }
+  .summary-list .k { font-size: .78rem; color: var(--ink-3); }
+  .summary-list .v { font-size: .92rem; font-weight: 500; overflow-wrap: anywhere; }
+  .summary-list .v.muted { color: var(--ink-3); font-weight: 400; }
+
+  .sources { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+  .source { display: grid; grid-template-columns: 2.4rem 1fr auto; gap: .75rem; align-items: center; text-align: left; padding: .85rem .9rem; border-radius: var(--radius-l); background: var(--surface); box-shadow: var(--card-shadow); }
+  .source .tile { width: 2.4rem; height: 2.4rem; border-radius: 10px; font: 700 .95rem/1 var(--display); }
+  .source b { font-size: .92rem; display: block; }
+  .source span { font-size: .78rem; color: var(--ink-3); }
+  .source:disabled { opacity: .55; }
+  .track { width: 2.25rem; height: 1.35rem; border-radius: 99px; background: var(--hair-strong); position: relative; transition: background-color 180ms ease; flex: none; }
+  .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: calc(1.35rem - 4px); height: calc(1.35rem - 4px); border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform 240ms var(--spring); }
+  [aria-checked="true"] > .track { background: var(--accent); }
+  [aria-checked="true"] > .track::after { transform: translateX(.9rem); }
+
+  .start-card { margin-top: 1.5rem; padding: 1.4rem; border-radius: var(--radius-l); background: var(--surface); box-shadow: var(--card-shadow); display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+  .start-card p { margin: 0; flex: 1 1 14rem; color: var(--ink-2); font-size: .9rem; }
+  .start-card p b { display: block; color: var(--ink); font-size: 1rem; margin-bottom: .15rem; }
+
+  /* ---------- Aside: CV preview / search card ---------- */
+  .aside { border-left: 1px solid var(--hair); padding: 1.5rem 1.5rem 2rem; background: color-mix(in srgb, var(--paper) 55%, var(--hair)); }
+  .aside-inner { position: sticky; top: 5.25rem; }
+  .aside-head { display: flex; align-items: center; gap: .75rem; margin-bottom: .9rem; }
+  .aside-head .t { flex: 1; min-width: 0; }
+  .aside-head b { display: block; font-size: .92rem; }
+  .aside-head span { font-size: .78rem; color: var(--ink-3); }
+  .paper-wrap { position: relative; overflow: hidden; border-radius: 4px; box-shadow: var(--sheet-shadow); background: #fff; }
+  .paper-scroll { max-height: calc(100vh - 11rem); overflow-y: auto; border-radius: 4px; scrollbar-width: thin; }
+
+  /* The CV page itself: always paper-white, ATS-style single column */
+  .cv { width: 794px; min-height: 1123px; padding: 56px 64px; background: #fff; color: #1D2129; transform-origin: 0 0;
+        font: 14px/1.38 Calibri, Carlito, "Segoe UI", Arial, sans-serif; }
+  .cv h2 { font-size: 30px; line-height: 1.1; margin: 0; font-weight: 700; letter-spacing: -.01em; }
+  .cv .cv-title { font-size: 17px; margin-top: 4px; }
+  .cv .cv-contact { margin-top: 6px; color: #333; }
+  .cv section { position: relative; margin-top: 14px; border-radius: 4px; transition: background-color 300ms ease, box-shadow 300ms ease; }
+  .cv .cv-head { position: relative; border-radius: 4px; transition: background-color 300ms ease, box-shadow 300ms ease; }
+  .cv .is-active { background: rgba(11, 110, 153, .07); box-shadow: -10px 0 0 rgba(11, 110, 153, .07), 10px 0 0 rgba(11, 110, 153, .07), -13px 0 0 #0B6E99; }
+  .cv h3 { font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; margin: 0 0 6px; padding-bottom: 2px; border-bottom: 1px solid #808080; }
+  .cv .e { margin-bottom: 8px; }
+  .cv .e-top { display: flex; justify-content: space-between; gap: 16px; }
+  .cv .e-top b { font-weight: 700; }
+  .cv .e-top span { white-space: nowrap; }
+  .cv .e-sub { font-style: italic; }
+  .cv ul { margin: 2px 0 0; padding-left: 18px; }
+  .cv li { margin: 1px 0; }
+  .cv p { margin: 0 0 3px; }
+  .cv .ph { color: #B4B9C2; }
+  .cv .ph-block { height: 10px; border-radius: 3px; background: #EEF0F3; margin: 7px 0; }
+
+  .search-card { background: var(--surface); border-radius: var(--radius-l); box-shadow: var(--card-shadow); padding: 1.2rem; }
+  .search-card h2 { display: flex; align-items: center; gap: .6rem; margin: 0 0 1rem; font: 650 1.05rem/1.3 var(--display); }
+  .search-card h2 .tile { width: 2.25rem; height: 2.25rem; border-radius: 10px; }
+  .sc-row { padding: .7rem 0; border-top: 1px solid var(--hair); }
+  .sc-row .k { display: flex; align-items: center; gap: .4rem; font-size: .76rem; color: var(--ink-3); margin-bottom: .35rem; }
+  .sc-row .k svg { width: .85rem; height: .85rem; }
+  .sc-row .v { display: flex; flex-wrap: wrap; gap: .3rem; font-size: .88rem; }
+  .sc-row .v .pill { background: var(--paper); }
+  .sc-row .none { color: var(--ink-3); font-size: .84rem; }
+  .estimate { margin-top: .9rem; display: flex; align-items: center; gap: .5rem; font-size: .82rem; color: var(--ink-2); padding: .65rem .8rem; background: var(--paper); border-radius: var(--radius-m); }
+
+  .ring { position: relative; width: 2.6rem; height: 2.6rem; flex: none; }
+  .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring circle { fill: none; stroke-width: 3.2; }
+  .ring .bg { stroke: var(--hair); }
+  .ring .fg { stroke-linecap: round; transition: stroke-dashoffset 600ms var(--spring), stroke 300ms ease; }
+  .ring b { position: absolute; inset: 0; display: grid; place-items: center; font-size: .8rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .ring.lg { width: 4.75rem; height: 4.75rem; } .ring.lg b { font-size: 1.35rem; }
+  .t-hi .fg { stroke: var(--good); } .t-hi b { color: var(--good); }
+  .t-mid .fg { stroke: var(--accent); } .t-mid b { color: var(--accent); }
+  .t-lo .fg { stroke: var(--warn); } .t-lo b { color: var(--warn); }
+
+  /* Mobile preview sheet */
+  .peek { display: none; }
+  .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(10, 12, 16, .4); opacity: 0; pointer-events: none; transition: opacity 250ms ease; }
+  body.sheet-open .scrim { opacity: 1; pointer-events: auto; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 1.5rem; z-index: 60; display: flex; align-items: center; gap: 1rem;
+    padding: .65rem .7rem .65rem 1.1rem; border-radius: var(--radius-l); background: var(--ink); color: var(--paper);
+    font-size: .88rem; box-shadow: var(--sheet-shadow); max-width: calc(100vw - 2rem);
+    transform: translate(-50%, 1.5rem) scale(.96); opacity: 0; pointer-events: none;
+    transition: transform 380ms var(--spring), opacity 200ms ease;
+  }
+  .toast.show { transform: translate(-50%, 0) scale(1); opacity: 1; pointer-events: auto; }
+  .toast button { color: var(--paper); font-weight: 650; padding: .3rem .7rem; border-radius: var(--radius-s); background: rgba(127,127,127,.25); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1240px) {
+    .shell { grid-template-columns: 12.5rem minmax(0, 1fr) minmax(19rem, 24rem); }
+  }
+  @media (max-width: 1040px) {
+    .shell, .shell.no-aside { grid-template-columns: 12.5rem minmax(0, 1fr); }
+    .aside {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; max-height: 88vh; overflow-y: auto; border: 0;
+      border-radius: 20px 20px 0 0; background: var(--paper); box-shadow: var(--sheet-shadow);
+      transform: translateY(104%); visibility: hidden; transition: transform 460ms var(--spring), visibility 0s 460ms;
+    }
+    body.sheet-open .aside { transform: none; visibility: visible; transition: transform 460ms var(--spring); }
+    .aside-inner { position: static; max-width: 34rem; margin: 0 auto; }
+    .paper-scroll { max-height: none; }
+    .peek { display: inline-flex; }
+    .welcome { grid-template-columns: 1fr; padding-top: 3rem; gap: 1rem; }
+    .art { height: 22rem; max-width: 32rem; width: 100%; }
+  }
+  @media (max-width: 760px) {
+    .shell, .shell.no-aside { grid-template-columns: minmax(0, 1fr); }
+    .rail { border: 0; padding: .9rem 1rem 0; }
+    .rail-inner { position: static; }
+    .rail h2, .rail ol { display: none; }
+    .rail-progress { margin: 0; }
+    .bar { gap: .5rem; padding: 0 .75rem; }
+    .logo { font-size: 0; gap: 0; }
+    .phases { margin: 0 auto 0 0; }
+    .phases li + li::before { width: .6rem; }
+    .phase .lbl { display: none; }
+    .phase[aria-current="step"] .lbl { display: inline; }
+    .save-state span { display: none; }
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .mini-row.c3, .mini-row.c2 { grid-template-columns: minmax(0, 1fr) auto; }
+    .mini-row .field:nth-child(2), .mini-row .field:nth-child(3) { grid-column: 1; }
+    .main { padding-top: 1.25rem; }
+    .step-head { grid-template-columns: 1fr; }
+    .step-head h1 { font-size: 1.55rem; }
+    .welcome { padding: 2rem 1rem 3rem; }
+    .art { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+    .step.enter { animation: fade 200ms ease both !important; }
+    @keyframes fade { from { opacity: 0; } }
+    .aside { transition: opacity 200ms ease !important; }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .bar { backdrop-filter: none; background: var(--paper); }
+  }
+  @media (prefers-contrast: more) {
+    :root { --hair: rgba(127,127,127,.45); --hair-strong: rgba(127,127,127,.75); }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4M16 13H8M16 17H8M10 9H8"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4M22 5h-4"/></symbol>
+  <symbol id="i-trending" viewBox="0 0 24 24"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r="1"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+  <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 24 24"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.2-4.2"/></symbol>
+  <symbol id="i-languages" viewBox="0 0 24 24"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></symbol>
+  <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-headset" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+  <symbol id="i-cloud-off" viewBox="0 0 24 24"><path d="m2 2 20 20"/><path d="M5.78 5.78A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.31-.2"/><path d="M21.53 16.5A4.5 4.5 0 0 0 17.5 10h-1.79A7 7 0 0 0 9.2 5.06"/></symbol>
+  <symbol id="logo" viewBox="0 0 36 36"><circle cx="18" cy="18" r="14" fill="none" stroke="var(--hair-strong)" stroke-width="5"/><circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round" stroke-dasharray="88" stroke-dashoffset="22" transform="rotate(-90 18 18)"/></symbol>
+</svg>
+
+<header class="bar">
+  <a class="logo" href="#welcome" aria-label="Job Hunt home"><svg aria-hidden="true"><use href="#logo"/></svg>Job Hunt</a>
+  <ol class="phases" id="phases" aria-label="Setup progress"></ol>
+  <div class="bar-right">
+    <span class="save-state" id="save-state" aria-live="polite"></span>
+    <a class="btn quiet" id="to-jobs" href="/" hidden>Back to jobs</a>
+  </div>
+</header>
+
+<div id="app"></div>
+<div class="scrim" id="scrim"></div>
+<div class="toast" id="toast" role="status"><span id="toast-msg"></span><button id="toast-undo" hidden>Undo</button></div>
+
+<script>
+/* ======================================================================
+   Data
+   ====================================================================== */
+const FIELDS = [
+  { id: "software", name: "Software", icon: "code",
+    roles: ["Software Engineer", "Frontend Developer", "Backend Developer", "Full Stack Developer", "Mobile Developer", "Web Developer", "DevOps Engineer", "QA Engineer", "Data Engineer", "Cloud Engineer", "Machine Learning Engineer", "Game Developer"],
+    skills: ["JavaScript", "TypeScript", "React", "Node.js", "Python", "Java", "C#", ".NET", "PHP", "Laravel", "SQL", "Git", "Docker", "AWS", "REST APIs", "Kubernetes", "CI/CD", "Agile", "Next.js", "Flutter"] },
+  { id: "data", name: "Data", icon: "chart",
+    roles: ["Data Analyst", "Data Scientist", "Business Intelligence Analyst", "Business Analyst", "Analytics Engineer", "Research Analyst"],
+    skills: ["SQL", "Excel", "Python", "Power BI", "Tableau", "Statistics", "R", "Pandas", "Data Visualization", "Machine Learning", "Looker", "A/B Testing"] },
+  { id: "design", name: "Design", icon: "pen",
+    roles: ["UI/UX Designer", "Product Designer", "Graphic Designer", "UX Researcher", "Motion Designer", "Visual Designer"],
+    skills: ["Figma", "Adobe Photoshop", "Adobe Illustrator", "Prototyping", "User Research", "Wireframing", "Design Systems", "Typography", "Adobe After Effects", "Usability Testing"] },
+  { id: "product", name: "Product & projects", icon: "layers",
+    roles: ["Product Manager", "Project Manager", "Product Owner", "Scrum Master", "Project Coordinator", "Program Manager"],
+    skills: ["Roadmapping", "Agile", "Scrum", "Jira", "Stakeholder Management", "User Stories", "Risk Management", "Confluence", "Budgeting", "MS Project"] },
+  { id: "marketing", name: "Marketing", icon: "megaphone",
+    roles: ["Digital Marketing Specialist", "Content Writer", "SEO Specialist", "Social Media Manager", "Marketing Executive", "Copywriter", "Performance Marketer"],
+    skills: ["SEO", "Google Analytics", "Content Strategy", "Social Media Marketing", "Google Ads", "Meta Ads", "Email Marketing", "Copywriting", "HubSpot", "Canva"] },
+  { id: "sales", name: "Sales", icon: "trending",
+    roles: ["Sales Executive", "Business Development Executive", "Account Manager", "Sales Representative", "Customer Success Manager"],
+    skills: ["CRM", "Salesforce", "Lead Generation", "Negotiation", "B2B Sales", "Cold Outreach", "Pipeline Management", "Account Management"] },
+  { id: "finance", name: "Finance", icon: "wallet",
+    roles: ["Accountant", "Financial Analyst", "Audit Associate", "Bookkeeper", "Tax Consultant", "Investment Analyst"],
+    skills: ["Financial Reporting", "Excel", "QuickBooks", "IFRS", "Budgeting", "Forecasting", "Auditing", "Financial Modeling", "SAP", "Tally"] },
+  { id: "people", name: "HR & people", icon: "users",
+    roles: ["HR Executive", "Recruiter", "Talent Acquisition Specialist", "HR Generalist", "Learning and Development Specialist"],
+    skills: ["Recruitment", "Onboarding", "HRIS", "Employee Relations", "Payroll", "Labour Law", "Interviewing", "Performance Management"] },
+  { id: "support", name: "Support", icon: "headset",
+    roles: ["Customer Support Specialist", "Technical Support Engineer", "Customer Service Representative", "IT Support Specialist", "Help Desk Technician"],
+    skills: ["Zendesk", "Troubleshooting", "Customer Service", "Ticketing Systems", "Communication", "Windows", "Networking", "Live Chat"] },
+  { id: "ops", name: "Operations & admin", icon: "clipboard",
+    roles: ["Operations Executive", "Administrative Assistant", "Executive Assistant", "Supply Chain Analyst", "Procurement Officer", "Virtual Assistant"],
+    skills: ["Microsoft Office", "Scheduling", "Data Entry", "Inventory Management", "Procurement", "Logistics", "Documentation", "Google Workspace"] },
+  { id: "health", name: "Healthcare", icon: "heart",
+    roles: ["Registered Nurse", "Medical Officer", "Pharmacist", "Medical Coder", "Healthcare Administrator", "Lab Technician"],
+    skills: ["Patient Care", "EMR", "Medical Terminology", "ICD-10", "Clinical Documentation", "HIPAA", "Phlebotomy", "BLS"] },
+  { id: "education", name: "Education", icon: "book",
+    roles: ["Teacher", "Lecturer", "Teaching Assistant", "Instructional Designer", "Tutor", "Academic Coordinator"],
+    skills: ["Curriculum Design", "Lesson Planning", "Classroom Management", "LMS", "Assessment", "E-learning", "Mentoring"] },
+];
+const SOFT_SKILLS = ["Communication", "Teamwork", "Problem Solving", "Time Management", "Leadership", "Attention to Detail", "Adaptability", "Critical Thinking"];
+const AVOID_SUGGEST = ["Unpaid", "Commission only", "Volunteer", "Sales", "Call center", "Night shift", "Telemarketing", "MLM"];
+const LEVELS = [
+  { id: "internship", icon: "cap", name: "Internship", desc: "Student or recent graduate. Short-term placements and trainee roles." },
+  { id: "entry", icon: "sprout", name: "Entry level", desc: "Junior and graduate roles, about 0–2 years of experience." },
+  { id: "mid", icon: "trending", name: "Mid level", desc: "Independent contributor, about 2–5 years." },
+  { id: "senior", icon: "star", name: "Senior", desc: "Deep expertise and mentoring, 5+ years." },
+  { id: "lead", icon: "crown", name: "Lead & manager", desc: "Leads a team, function or practice." },
+];
+const JOB_TYPES = [["full_time", "Full-time"], ["part_time", "Part-time"], ["contract", "Contract"], ["temporary", "Temporary"]];
+const MODES = [
+  { id: "remote", icon: "globe", name: "Remote", desc: "Work from home, wherever the employer allows." },
+  { id: "hybrid", icon: "laptop", name: "Hybrid", desc: "Some days at home, some in the office." },
+  { id: "onsite", icon: "building", name: "On-site", desc: "In the office every day, near where you live." },
+];
+const STRICTNESS = [[25, "Relaxed", "Show more jobs, including loose matches."], [35, "Balanced", "A good mix of reach and relevance."], [50, "Strict", "Only jobs that match your roles and several skills."]];
+const POSTED = [[1, "Past 24 hours"], [7, "Past week"], [30, "Past month"]];
+const SOURCES = [
+  { id: "linkedin", name: "LinkedIn", mark: "in", desc: "Every country. Remote, hybrid and on-site." },
+  { id: "remotive", name: "Remotive", mark: "R", desc: "Remote jobs worldwide.", remoteOnly: true },
+  { id: "jobicy", name: "Jobicy", mark: "J", desc: "Remote jobs worldwide.", remoteOnly: true },
+  { id: "bdjobs", name: "BDjobs", mark: "bd", desc: "Bangladesh's largest job site.", country: "bangladesh" },
+];
+const REGIONS = {
+  "Asia": ["bangladesh", "india", "pakistan", "sri lanka", "nepal", "china", "japan", "korea", "singapore", "malaysia", "indonesia", "philippines", "vietnam", "thailand", "hong kong", "taiwan"],
+  "APAC": ["bangladesh", "india", "pakistan", "sri lanka", "nepal", "china", "japan", "korea", "singapore", "malaysia", "indonesia", "philippines", "vietnam", "thailand", "australia", "new zealand"],
+  "EMEA": ["united kingdom", "ireland", "germany", "france", "spain", "italy", "netherlands", "poland", "portugal", "sweden", "norway", "denmark", "finland", "egypt", "nigeria", "kenya", "south africa", "united arab emirates", "saudi arabia", "israel", "turkey", "morocco"],
+  "Europe": ["united kingdom", "ireland", "germany", "france", "spain", "italy", "netherlands", "poland", "portugal", "sweden", "norway", "denmark", "finland", "austria", "belgium", "switzerland", "czech republic", "romania", "greece", "hungary", "ukraine"],
+  "Middle East": ["united arab emirates", "saudi arabia", "qatar", "kuwait", "bahrain", "oman", "jordan", "lebanon", "israel", "turkey", "egypt"],
+  "Africa": ["nigeria", "kenya", "south africa", "egypt", "ghana", "morocco", "ethiopia", "uganda", "tanzania"],
+  "LATAM": ["mexico", "brazil", "argentina", "colombia", "chile", "peru", "uruguay", "costa rica", "ecuador"],
+  "North America": ["united states", "canada", "mexico"],
+};
+const COUNTRIES = ["Argentina", "Australia", "Austria", "Bahrain", "Bangladesh", "Belgium", "Brazil", "Canada", "Chile", "China", "Colombia", "Costa Rica", "Czech Republic", "Denmark", "Ecuador", "Egypt", "Ethiopia", "Finland", "France", "Germany", "Ghana", "Greece", "Hong Kong", "Hungary", "India", "Indonesia", "Ireland", "Israel", "Italy", "Japan", "Jordan", "Kenya", "Korea", "Kuwait", "Lebanon", "Malaysia", "Mexico", "Morocco", "Nepal", "Netherlands", "New Zealand", "Nigeria", "Norway", "Oman", "Pakistan", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Saudi Arabia", "Singapore", "South Africa", "Spain", "Sri Lanka", "Sweden", "Switzerland", "Taiwan", "Tanzania", "Thailand", "Turkey", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Vietnam"];
+const LANG_LEVELS = ["Native", "Fluent", "Professional", "Intermediate", "Basic"];
+const ACTION_VERBS = new Set(("achieved accelerated added administered advised analyzed analysed answered applied arranged assessed assisted audited authored automated balanced boosted briefed budgeted built calculated championed changed chaired coached collaborated collected communicated compiled completed composed conceived conducted configured consolidated constructed consulted contributed controlled converted coordinated created cultivated cut debugged decreased defined delivered demonstrated deployed designed developed devised diagnosed directed discovered drafted drove edited educated eliminated enabled engineered enhanced established evaluated exceeded executed expanded expedited facilitated fixed forecasted formulated founded generated grew guided handled headed helped identified implemented improved increased influenced initiated innovated inspected installed instructed integrated interviewed introduced investigated launched led maintained managed mapped marketed maximized measured mentored merged migrated minimized modeled modelled monitored motivated negotiated onboarded operated optimized orchestrated organized organised oversaw partnered performed pioneered planned prepared presented prioritized processed produced programmed promoted proposed prototyped provided published raised ran rebuilt recommended reconciled recruited redesigned reduced refactored refined reorganized replaced reported researched resolved restructured revamped reviewed revised saved scaled scheduled secured selected served set shipped simplified solved spearheaded standardized started streamlined strengthened structured supervised supported surpassed taught tested tracked trained transformed translated tripled troubleshot tutored unified upgraded used utilized validated won wrote").split(" "));
+
+/* ======================================================================
+   State
+   ====================================================================== */
+let P, C, DEF, criteriaExisted = false;
+let ui = { field: null, sheet: false };
+let current = null, lastIndex = -1;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const icon = (id) => `<svg class="i" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+const clone = (o) => JSON.parse(JSON.stringify(o));
+const words = (s) => (s || "").trim().split(/\s+/).filter(Boolean).length;
+const lc = (s) => (s || "").toLowerCase().trim();
+const editing = () => !!(P?.complete && C?.complete);
+
+function getPath(path) {
+  const [r, ...rest] = path.split(".");
+  let o = r === "P" ? P : C;
+  for (const k of rest) { if (o == null) return undefined; o = o[k]; }
+  return o;
+}
+function setPath(path, v) {
+  const [r, ...rest] = path.split(".");
+  let o = r === "P" ? P : C;
+  for (let i = 0; i < rest.length - 1; i++) o = o[rest[i]];
+  o[rest[rest.length - 1]] = v;
+}
+
+/* ======================================================================
+   Steps
+   ====================================================================== */
+const STEPS = [
+  { phase: "cv", id: "personal", label: "About you", icon: "user", title: "Let's start with you",
+    lead: "Recruiters and ATS software read this part first. Use the contact details you want employers to reach you on.",
+    section: "head", render: rPersonal, validate: vPersonal, done: () => !vPersonal().length },
+  { phase: "cv", id: "summary", label: "Summary", icon: "file", title: "Your professional summary",
+    lead: "Two to four sentences on who you are, what you're good at, and the result you bring.",
+    section: "Summary", render: rSummary, done: () => words(P.summary) >= 20 },
+  { phase: "cv", id: "experience", label: "Experience", icon: "briefcase", title: "Work experience", optional: true,
+    lead: "Most recent first. Internships, freelance and part-time work all count.",
+    section: "Experience", render: rExperience, done: () => P.experience.some((e) => e.title) },
+  { phase: "cv", id: "education", label: "Education", icon: "cap", title: "Education",
+    lead: "Your highest qualification first. Add school-level results only if you're a student or recent graduate.",
+    section: "Education", render: rEducation, done: () => P.education.some((e) => e.degree || e.school) },
+  { phase: "cv", id: "skills", label: "Skills", icon: "wrench", title: "Skills",
+    lead: "ATS software compares these words with each job ad, so use the exact names employers use.",
+    section: "Skills", render: rSkills, done: () => allSkills().length >= 5 },
+  { phase: "cv", id: "projects", label: "Projects", icon: "folder", title: "Projects", optional: true,
+    lead: "Personal, academic or freelance work that shows your skills. Especially useful if you're early in your career.",
+    section: "Projects", render: rProjects, done: () => P.projects.some((x) => x.name) },
+  { phase: "cv", id: "extras", label: "More", icon: "award", title: "Certifications, languages and awards", optional: true,
+    lead: "Anything else that helps an employer say yes.",
+    section: ["Certifications", "Awards and Activities", "Languages"], render: rExtras,
+    done: () => P.certifications.length + P.languages.length + P.awards.length > 0 },
+  { phase: "cv", id: "review", label: "Check & download", icon: "sparkles", title: "Check your CV",
+    lead: "Here's how ATS-friendly your CV is. Fix what's flagged, then download it as PDF or Word.",
+    render: rCvReview, done: () => P.complete },
+  { phase: "search", id: "level", label: "Level", icon: "trending", title: "What level of job are you after?",
+    lead: "Pick every level you'd apply for. Jobs that are clearly too junior or too senior are skipped.",
+    render: rLevel, validate: vLevel, done: () => C.levels.length > 0 },
+  { phase: "search", id: "roles", label: "Roles", icon: "target", title: "Which roles should we look for?",
+    lead: "Each role becomes its own search. Two to six focused roles give the best results.",
+    render: rRoles, validate: vRoles, done: () => C.roles.length > 0 },
+  { phase: "search", id: "keywords", label: "Keywords", icon: "tag", title: "Keywords that matter to you",
+    lead: "Jobs that mention more of your skills rank higher. Jobs with words you want to avoid are skipped.",
+    render: rKeywords, done: () => C.keywords.length > 0 },
+  { phase: "search", id: "location", label: "Location", icon: "pin", title: "Where do you want to work?",
+    lead: "Choose how you want to work and where you're based, so we only show jobs you can actually take.",
+    render: rLocation, validate: vLocation, done: () => C.work_modes.length > 0 && (!!C.country || !needsCountry()) },
+  { phase: "search", id: "start", label: "Start", icon: "rocket", title: "Ready to search",
+    lead: "Check your choices, pick the job sites to search, and start.",
+    render: rStart, done: () => C.complete },
+];
+const stepIndex = (id) => STEPS.findIndex((s) => `${s.phase}/${s.id}` === id);
+
+/* ======================================================================
+   Small builders
+   ====================================================================== */
+function field(k, label, o = {}) {
+  const id = "f-" + k.replace(/\./g, "-");
+  const v = getPath(k) ?? "";
+  const attrs = [
+    o.type ? `type="${o.type}"` : `type="text"`, o.ph ? `placeholder="${esc(o.ph)}"` : "", o.auto ? `autocomplete="${o.auto}"` : "",
+    o.list ? `list="${o.list}"` : "", o.req ? `aria-required="true"` : "", o.disabled ? "disabled" : "",
+    o.hint ? `aria-describedby="${id}-hint"` : "",
+  ].join(" ");
+  const control = o.textarea
+    ? `<textarea id="${id}" data-k="${k}" ${o.lines ? "data-lines" : ""} rows="${o.rows || 4}" placeholder="${esc(o.ph || "")}" ${o.hint ? `aria-describedby="${id}-hint"` : ""}>${esc(o.lines ? (v || []).join("\n") : v)}</textarea>`
+    : o.options
+      ? `<select id="${id}" data-k="${k}">${o.options.map((x) => `<option ${x === v ? "selected" : ""}>${esc(x)}</option>`).join("")}</select>`
+      : `<input id="${id}" data-k="${k}" value="${esc(v)}" ${attrs}>`;
+  return `<div class="field ${o.span2 ? "span2" : ""}">
+    <label for="${id}">${label}${o.req ? ' <span class="req" aria-hidden="true">*</span>' : ""}${o.optional ? ' <span class="opt-tag">(optional)</span>' : ""}</label>
+    ${control}
+    ${o.hint ? `<p class="hint" id="${id}-hint">${o.hint}</p>` : ""}
+    <p class="err" id="${id}-err" hidden></p>
+  </div>`;
+}
+
+function chipInput(k, o = {}) {
+  const arr = getPath(k) || [];
+  const id = o.id || "c-" + k.replace(/\./g, "-");
+  const have = new Set(arr.map(lc));
+  const sugg = (o.suggestions || []).filter((s, i, a) => !have.has(lc(s)) && a.findIndex((x) => lc(x) === lc(s)) === i).slice(0, o.max || 14);
+  return `<div class="chipbox" data-chips="${k}" id="${id}-box" ${o.label ? `role="group" aria-label="${esc(o.label)}"` : ""}>
+      ${arr.map((v, i) => `<span class="chip ${o.neg ? "neg" : ""}">${esc(v)}<button type="button" data-chip-del="${i}" aria-label="Remove ${esc(v)}">${icon("x")}</button></span>`).join("")}
+      <input id="${id}" data-chip-input="${k}" placeholder="${esc(arr.length ? o.ph2 || "Add another" : o.ph || "Type and press Enter")}" autocomplete="off" ${o.label ? `aria-label="${esc(o.label)}"` : ""}>
+    </div>
+    ${sugg.length ? `${o.suggestLabel ? `<p class="suggest-label">${o.suggestLabel}</p>` : ""}<div class="suggest">${sugg.map((s) =>
+      `<button type="button" class="sug" data-chip-add="${k}" data-v="${esc(s)}">${icon("plus")}${esc(s)}</button>`).join("")}</div>` : ""}`;
+}
+
+function itemTools(list, i, n) {
+  return `<span class="item-tools">
+    <button type="button" class="icon-btn" data-move="${list}" data-i="${i}" data-d="-1" ${i === 0 ? "disabled" : ""} aria-label="Move up">${icon("up")}</button>
+    <button type="button" class="icon-btn" data-move="${list}" data-i="${i}" data-d="1" ${i === n - 1 ? "disabled" : ""} aria-label="Move down">${icon("down")}</button>
+    <button type="button" class="icon-btn danger" data-del="${list}" data-i="${i}" aria-label="Delete">${icon("trash")}</button>
+  </span>`;
+}
+
+function ring(score, cls = "") {
+  const c = 2 * Math.PI * 15;
+  const t = score >= 75 ? "t-hi" : score >= 50 ? "t-mid" : "t-lo";
+  return `<div class="ring ${t} ${cls}" role="img" aria-label="Score ${score} out of 100">
+    <svg viewBox="0 0 36 36" aria-hidden="true"><circle class="bg" cx="18" cy="18" r="15"/>
+    <circle class="fg" cx="18" cy="18" r="15" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - score / 100)}"/></svg>
+    <b aria-hidden="true">${score}</b></div>`;
+}
+
+function bulletLint(bullets) {
+  const b = (bullets || []).filter((x) => x.trim());
+  if (!b.length) return "";
+  const nums = b.filter((x) => /\d/.test(x)).length;
+  const weak = b.filter((x) => !ACTION_VERBS.has(lc(x.replace(/^[•\-*\s]+/, "").split(/\s+/)[0]).replace(/[^a-z]/g, ""))).length;
+  const long = b.filter((x) => words(x) > 35).length;
+  return [
+    `<span class="pill">${b.length} point${b.length > 1 ? "s" : ""}</span>`,
+    nums ? `<span class="pill good">${icon("check")}${nums} with numbers</span>` : `<span class="pill warn">${icon("alert")}Add a number to show impact</span>`,
+    weak ? `<span class="pill warn">${icon("alert")}${weak} not starting with an action verb</span>` : `<span class="pill good">${icon("check")}Strong verbs</span>`,
+    long ? `<span class="pill warn">${icon("alert")}${long} too long (35+ words)</span>` : "",
+  ].join("");
+}
+
+/* ======================================================================
+   CV steps
+   ====================================================================== */
+function rPersonal() {
+  return `<div class="grid">
+    ${field("P.personal.name", "Full name", { req: true, auto: "name", span2: true })}
+    ${field("P.personal.headline", "Professional title", { ph: "e.g. Frontend Developer", span2: true, hint: "The job title you're going for. It sits under your name and helps ATS match you to the right jobs." })}
+    ${field("P.personal.email", "Email", { req: true, type: "email", auto: "email" })}
+    ${field("P.personal.phone", "Phone", { req: true, type: "tel", auto: "tel", hint: "Include your country code." })}
+    ${field("P.personal.location", "Location", { req: true, ph: "City, Country", span2: true, auto: "address-level2", hint: "City and country are enough. Leave out your street address." })}
+    ${field("P.personal.linkedin", "LinkedIn profile", { type: "url", ph: "linkedin.com/in/yourname", optional: true })}
+    ${field("P.personal.website", "Portfolio or website", { type: "url", ph: "yourname.com", optional: true })}
+  </div>`;
+}
+function vPersonal() {
+  const me = P.personal, e = [];
+  if (!me.name.trim()) e.push(["P.personal.name", "Enter your full name."]);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(me.email.trim())) e.push(["P.personal.email", "Enter an email address like name@example.com."]);
+  if ((me.phone.match(/\d/g) || []).length < 7) e.push(["P.personal.phone", "Enter a phone number with at least 7 digits."]);
+  if (!me.location.trim()) e.push(["P.personal.location", "Enter your city and country."]);
+  return e;
+}
+
+function rSummary() {
+  const n = words(P.summary);
+  const cls = n === 0 ? "" : n < 30 ? "warn" : n <= 100 ? "good" : "warn";
+  const msg = n === 0 ? "Aim for 40–90 words" : n < 30 ? "A little short. Aim for 40–90 words" : n <= 100 ? "Good length" : "Too long. Trim to under 100 words";
+  return `${field("P.summary", "Summary", { textarea: true, rows: 7, ph: "e.g. Frontend developer with 3 years of experience building fast, accessible web apps in React and TypeScript…" })}
+    <div class="counter" style="margin-top:.4rem"><span id="sum-count" class="${cls}">${n} words · ${msg}</span>
+      <button type="button" class="link" id="draft-summary">${icon("sparkles")}Draft one from my CV</button></div>
+    <ul class="tips">
+      <h3>What makes a strong summary</h3>
+      <li>${icon("check")}Open with your title and years of experience.</li>
+      <li>${icon("check")}Name 3–5 skills that appear in the jobs you want.</li>
+      <li>${icon("check")}Finish with a result you're proud of, with a number if you can.</li>
+      <li>${icon("check")}Skip "I" and "my". Write "Built…" rather than "I built…".</li>
+    </ul>`;
+}
+
+function rExperience() {
+  const list = P.experience;
+  const items = list.map((e, i) => `
+    <details class="item" ${e._open !== false ? "open" : ""} data-item="experience" data-i="${i}">
+      <summary>${icon("briefcase")}<span class="item-title"><b>${esc(e.title || "New job")}</b><span>${esc([e.company, spanText(e)].filter(Boolean).join(" · ") || "Fill in the details below")}</span></span>
+        ${itemTools("experience", i, list.length)}${icon("down").replace('class="i"', 'class="i chev"')}</summary>
+      <div class="item-body grid">
+        ${field(`P.experience.${i}.title`, "Job title", { req: true, ph: "e.g. Marketing Executive" })}
+        ${field(`P.experience.${i}.company`, "Company", { req: true })}
+        ${field(`P.experience.${i}.location`, "Location", { ph: "City, Country or Remote", optional: true, span2: true })}
+        ${field(`P.experience.${i}.start`, "Start date", { type: "month", ph: "YYYY-MM" })}
+        ${field(`P.experience.${i}.end`, "End date", { type: "month", ph: "YYYY-MM", disabled: e.current })}
+        <label class="check-row span2"><input type="checkbox" data-k="P.experience.${i}.current" ${e.current ? "checked" : ""}>I currently work here</label>
+        <div class="span2">${field(`P.experience.${i}.bullets`, "What you did and achieved", { textarea: true, lines: true, rows: 5,
+          ph: "Built a customer dashboard used by 2,000 people a day\nCut report preparation time by 40% by automating it in Python",
+          hint: "One point per line. Start with a verb (Built, Led, Reduced) and add a number where you can." })}
+          <div class="lint" data-lint="experience.${i}">${bulletLint(e.bullets)}</div></div>
+      </div>
+    </details>`).join("");
+  return `${list.length ? "" : `<div class="empty-card"><div class="tile">${icon("briefcase")}</div><h3>No work experience yet?</h3>
+      <p>That's fine for internships and entry-level jobs. Skip this step and add projects instead, or add any part-time or volunteer work.</p></div>`}
+    <div class="items">${items}
+      <button type="button" class="add-btn" data-add="experience">${icon("plus")}${list.length ? "Add another job" : "Add a job"}</button></div>`;
+}
+
+function rEducation() {
+  const list = P.education;
+  const items = list.map((e, i) => `
+    <details class="item" ${e._open !== false ? "open" : ""} data-item="education" data-i="${i}">
+      <summary>${icon("cap")}<span class="item-title"><b>${esc(e.degree || "New qualification")}</b><span>${esc([e.school, spanText(e)].filter(Boolean).join(" · ") || "Fill in the details below")}</span></span>
+        ${itemTools("education", i, list.length)}${icon("down").replace('class="i"', 'class="i chev"')}</summary>
+      <div class="item-body grid">
+        ${field(`P.education.${i}.degree`, "Degree or qualification", { req: true, ph: "e.g. BSc in Computer Science", span2: true })}
+        ${field(`P.education.${i}.school`, "School, college or university", { req: true })}
+        ${field(`P.education.${i}.location`, "Location", { optional: true })}
+        ${field(`P.education.${i}.start`, "Start date", { type: "month", ph: "YYYY-MM", optional: true })}
+        ${field(`P.education.${i}.end`, "End date (or expected)", { type: "month", ph: "YYYY-MM" })}
+        ${field(`P.education.${i}.details`, "Details", { textarea: true, rows: 3, optional: true, span2: true,
+          ph: "CGPA 3.7/4.0\nThesis: Predicting traffic with machine learning", hint: "Grades, honours, thesis or relevant coursework. One per line." })}
+      </div>
+    </details>`).join("");
+  return `<div class="items">${items}
+    <button type="button" class="add-btn" data-add="education">${icon("plus")}${list.length ? "Add another qualification" : "Add a qualification"}</button></div>`;
+}
+
+function rSkills() {
+  const fieldsGuess = guessFields();
+  const f = FIELDS.find((x) => x.id === (ui.field || fieldsGuess[0])) || FIELDS[0];
+  const groups = P.skills;
+  const named = groups.length > 1 || groups.some((g) => g.group);
+  return `<div class="items">${groups.map((g, i) => `
+      <div class="field">
+        ${named ? `<div class="grid" style="grid-template-columns:minmax(0,1fr) auto;align-items:end;margin-bottom:.2rem">
+          ${field(`P.skills.${i}.group`, "Group name", { ph: "e.g. Technical, Tools, Soft skills" })}
+          <button type="button" class="icon-btn danger" data-del="skills" data-i="${i}" aria-label="Delete this group">${icon("trash")}</button></div>`
+          : `<span class="label" id="lbl-skills">Your skills</span>`}
+        ${chipInput(`P.skills.${i}.items`, { label: g.group || "Your skills", ph: "Type a skill and press Enter, e.g. Microsoft Excel",
+          suggestions: i === 0 ? f.skills.concat(SOFT_SKILLS) : SOFT_SKILLS, suggestLabel: i === 0 ? "Suggestions. Click to add." : "", max: 18 })}
+      </div>`).join("")}
+    </div>
+    <p class="suggest-label">Show suggestions for</p>
+    <div class="fields-tabs" role="group" aria-label="Suggestion field">${FIELDS.map((x) =>
+      `<button type="button" class="ftab" data-field="${x.id}" aria-pressed="${x.id === f.id}">${icon(x.icon)}${x.name}</button>`).join("")}</div>
+    <div style="margin-top:1rem"><button type="button" class="link" data-add="skills">${icon("plus")}${named ? "Add another group" : "Split into groups (Technical, Tools, Soft skills)"}</button></div>
+    <ul class="tips">
+      <li>${icon("check")}List 8–15 skills. Quality beats quantity.</li>
+      <li>${icon("check")}Copy the exact wording from job ads you like ("Microsoft Excel", not "spreadsheets").</li>
+      <li>${icon("check")}Skip star ratings and progress bars. ATS software can't read them.</li>
+    </ul>`;
+}
+
+function rProjects() {
+  const list = P.projects;
+  const items = list.map((x, i) => `
+    <details class="item" ${x._open !== false ? "open" : ""} data-item="projects" data-i="${i}">
+      <summary>${icon("folder")}<span class="item-title"><b>${esc(x.name || "New project")}</b><span>${esc([x.role, spanText(x)].filter(Boolean).join(" · ") || "Fill in the details below")}</span></span>
+        ${itemTools("projects", i, list.length)}${icon("down").replace('class="i"', 'class="i chev"')}</summary>
+      <div class="item-body grid">
+        ${field(`P.projects.${i}.name`, "Project name", { req: true })}
+        ${field(`P.projects.${i}.role`, "Your role or tools used", { ph: "e.g. Solo developer · React, Firebase", optional: true })}
+        ${field(`P.projects.${i}.link`, "Link", { type: "url", ph: "github.com/you/project", optional: true, span2: true })}
+        ${field(`P.projects.${i}.start`, "Start date", { type: "month", optional: true })}
+        ${field(`P.projects.${i}.end`, "End date", { type: "month", optional: true })}
+        <div class="span2">${field(`P.projects.${i}.bullets`, "What it does and what you achieved", { textarea: true, lines: true, rows: 4,
+          ph: "Built a budgeting app with 300 monthly users\nWrote automated tests that caught 25 bugs before launch", hint: "One point per line." })}
+          <div class="lint" data-lint="projects.${i}">${bulletLint(x.bullets)}</div></div>
+      </div>
+    </details>`).join("");
+  return `${list.length ? "" : `<div class="empty-card"><div class="tile">${icon("folder")}</div><h3>Show what you've built</h3>
+      <p>Class projects, open-source work, a portfolio piece or a side business. One or two strong projects are enough.</p></div>`}
+    <div class="items">${items}
+      <button type="button" class="add-btn" data-add="projects">${icon("plus")}${list.length ? "Add another project" : "Add a project"}</button></div>`;
+}
+
+function rExtras() {
+  const certs = P.certifications.map((c, i) => `<div class="mini-row c3">
+      ${field(`P.certifications.${i}.name`, "Certification", { ph: "e.g. Google Data Analytics" })}
+      ${field(`P.certifications.${i}.issuer`, "Issued by", { ph: "e.g. Coursera" })}
+      ${field(`P.certifications.${i}.date`, "Date", { type: "month" })}
+      <button type="button" class="icon-btn danger" data-del="certifications" data-i="${i}" aria-label="Delete certification">${icon("trash")}</button></div>`).join("");
+  const langs = P.languages.map((l, i) => `<div class="mini-row c2">
+      ${field(`P.languages.${i}.name`, "Language", { ph: "e.g. English" })}
+      ${field(`P.languages.${i}.level`, "Level", { options: LANG_LEVELS })}
+      <button type="button" class="icon-btn danger" data-del="languages" data-i="${i}" aria-label="Delete language">${icon("trash")}</button></div>`).join("");
+  const awards = P.awards.map((a, i) => `<div class="mini-row c2">
+      ${field(`P.awards.${i}.name`, "Award or activity", { ph: "e.g. Winner, National Hackathon 2024" })}
+      ${field(`P.awards.${i}.detail`, "Detail", { ph: "e.g. Led a team of 4 out of 120 teams" })}
+      <button type="button" class="icon-btn danger" data-del="awards" data-i="${i}" aria-label="Delete award">${icon("trash")}</button></div>`).join("");
+  return `
+    <div class="section-label">${icon("award")}Certifications</div>
+    <div class="row-list">${certs}</div><button type="button" class="link" data-add="certifications">${icon("plus")}Add a certification</button>
+    <div class="section-label">${icon("languages")}Languages</div>
+    <div class="row-list">${langs}</div><button type="button" class="link" data-add="languages">${icon("plus")}Add a language</button>
+    <div class="section-label">${icon("star")}Awards and activities</div>
+    <p class="hint">Awards, volunteering, clubs or leadership roles.</p>
+    <div class="row-list">${awards}</div><button type="button" class="link" data-add="awards">${icon("plus")}Add an award or activity</button>`;
+}
+
+function rCvReview() {
+  const a = atsCheck();
+  const verdict = a.score >= 85 ? "Excellent. Your CV is clear and easy for ATS software to read."
+    : a.score >= 70 ? "Strong. A few quick fixes will make it stronger." : a.score >= 50 ? "Getting there. Fix the flagged items below." : "Needs work. Start with the flagged items below.";
+  return `<div class="ats-hero">${ring(a.score, "lg")}<div><h2>ATS score ${a.score} out of 100</h2><p>${verdict}</p></div></div>
+    <ul class="checks">${a.checks.map((c) => `<li>
+      ${c.ok ? icon("check-circle").replace('class="i"', 'class="i y"') : icon("alert").replace('class="i"', 'class="i n"')}
+      <div><b>${c.label}</b><span>${c.ok ? c.okText || "" : c.tip}</span></div>
+      ${!c.ok && c.step ? `<button type="button" class="btn ghost" data-go="${c.step}">Fix</button>` : ""}</li>`).join("")}</ul>
+    <div class="downloads">
+      <a class="btn primary" href="/cv.pdf?download=1" download>${icon("download")}Download PDF</a>
+      <a class="btn quiet" href="/cv.docx" download>${icon("file")}Download Word</a>
+      <a class="btn ghost" href="/cv.pdf" target="_blank" rel="noopener">${icon("external")}Open PDF</a>
+    </div>
+    <p class="hint" style="margin-top:.7rem">Send the PDF unless a job site asks for a Word file. Both use the same ATS-friendly layout.</p>`;
+}
+
+/* ======================================================================
+   Search steps
+   ====================================================================== */
+function rLevel() {
+  const yrs = totalYears();
+  return `<div class="choices" role="group" aria-label="Job levels">${LEVELS.map((l) => `
+      <button type="button" class="choice" data-toggle="C.levels" data-v="${l.id}" aria-pressed="${C.levels.includes(l.id)}">
+        <span class="tick">${icon("check")}</span><span class="tile">${icon(l.icon)}</span><b>${l.name}</b><span>${l.desc}</span></button>`).join("")}</div>
+    <p class="err" id="err-levels" hidden></p>
+    ${P.experience.length ? `<p class="hint" style="margin-top:.8rem">${icon("sparkles")} Your CV shows about ${yrs < 1 ? "less than a year" : `${Math.round(yrs)} year${Math.round(yrs) === 1 ? "" : "s"}`} of experience.</p>` : ""}
+    <div class="section-label">${icon("clock")}Job type</div>
+    <div class="toggles" role="group" aria-label="Job types">${JOB_TYPES.map(([id, name]) =>
+      `<button type="button" class="tog" data-toggle="C.job_types" data-v="${id}" aria-pressed="${C.job_types.includes(id)}">${C.job_types.includes(id) ? icon("check") : ""}${name}</button>`).join("")}</div>
+    <p class="hint" style="margin-top:.5rem">Jobs that don't list a type are always kept.</p>`;
+}
+function vLevel() { return C.levels.length ? [] : [["levels", "Pick at least one level."]]; }
+
+function rRoles() {
+  const fromCv = cvRoles();
+  const f = FIELDS.find((x) => x.id === (ui.field || guessFields()[0])) || FIELDS[0];
+  const n = C.roles.length;
+  return `<span class="label" id="lbl-roles">Roles to search for</span>
+    ${chipInput("C.roles", { label: "Roles to search for", ph: "Type a job title and press Enter", suggestions: fromCv, suggestLabel: fromCv.length ? "From your CV" : "" })}
+    <p class="err" id="err-roles" hidden></p>
+    <p class="hint" style="margin-top:.5rem">${n > 8 ? `${icon("alert")} ${n} roles will make the search slow. Only the first 10 are searched on LinkedIn.` : n ? `${n} role${n > 1 ? "s" : ""}. Similar titles are matched too: "Developer" also finds "Engineer".` : "Use the job titles employers post, like \"Data Analyst\" rather than \"data person\"."}</p>
+    <p class="suggest-label">Browse roles by field</p>
+    <div class="fields-tabs" role="group" aria-label="Field">${FIELDS.map((x) =>
+      `<button type="button" class="ftab" data-field="${x.id}" aria-pressed="${x.id === f.id}">${icon(x.icon)}${x.name}</button>`).join("")}</div>
+    <div class="suggest">${f.roles.filter((r) => !C.roles.some((x) => lc(x) === lc(r))).map((r) =>
+      `<button type="button" class="sug" data-chip-add="C.roles" data-v="${esc(r)}">${icon("plus")}${esc(r)}</button>`).join("")}</div>`;
+}
+function vRoles() { return C.roles.length ? [] : [["roles", "Add at least one role to search for."]]; }
+
+function rKeywords() {
+  const strict = STRICTNESS.find(([v]) => v === C.min_score) || STRICTNESS[1];
+  return `<div class="section-label" style="margin-top:0">${icon("tag")}Skills to look for</div>
+    <p class="hint">Picked from your CV. Jobs that mention more of these rank higher.</p>
+    ${chipInput("C.keywords", { label: "Skills to look for", ph: "Add a skill or tool", suggestions: allSkills(), suggestLabel: "More from your CV" })}
+    <div class="section-label">${icon("ban")}Words to avoid</div>
+    <p class="hint">Jobs with these words in the title are skipped.</p>
+    ${chipInput("C.exclude", { label: "Words to avoid", ph: "e.g. Unpaid", suggestions: AVOID_SUGGEST, neg: true })}
+    <div class="section-label">${icon("target")}How picky should we be?</div>
+    <div class="seg" role="group" aria-label="Match strictness">${STRICTNESS.map(([v, name]) =>
+      `<button type="button" data-set="C.min_score" data-v="${v}" aria-pressed="${C.min_score === v}">${name}</button>`).join("")}</div>
+    <p class="seg-desc">${strict[2]}</p>`;
+}
+
+function rLocation() {
+  const auto = autoRegions();
+  return `<div class="choices" role="group" aria-label="Work modes" style="grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr))">${MODES.map((m) => `
+      <button type="button" class="choice" data-toggle="C.work_modes" data-v="${m.id}" aria-pressed="${C.work_modes.includes(m.id)}">
+        <span class="tick">${icon("check")}</span><span class="tile">${icon(m.icon)}</span><b>${m.name}</b><span>${m.desc}</span></button>`).join("")}</div>
+    <p class="err" id="err-work_modes" hidden></p>
+    <div class="section-label">${icon("pin")}Where you're based</div>
+    <div class="grid">
+      ${field("C.country", "Country", { list: "countries", req: needsCountry(), ph: "e.g. India", auto: "country-name" })}
+      ${field("C.city", "City", { ph: "e.g. Bengaluru", optional: true, hint: "On-site and hybrid jobs must be in this city. Leave it empty to include your whole country." })}
+    </div>
+    <datalist id="countries">${COUNTRIES.map((c) => `<option value="${c}">`).join("")}</datalist>
+    ${C.work_modes.includes("remote") ? `
+    <div class="section-label">${icon("globe")}Remote jobs open to</div>
+    <p class="hint">Jobs open worldwide or to ${esc(C.country || "your country")} are always included. Add regions that should count too.</p>
+    <div class="toggles" style="margin-top:.7rem" role="group" aria-label="Regions">${Object.keys(REGIONS).map((r) => {
+      const on = C.regions.includes(r) || auto.includes(r);
+      return `<button type="button" class="tog" data-toggle="C.regions" data-v="${r}" aria-pressed="${on}" ${auto.includes(r) ? `disabled title="Includes ${esc(C.country)}"` : ""}>${on ? icon("check") : ""}${r}</button>`;
+    }).join("")}</div>` : ""}
+    <div class="section-label">${icon("clock")}Posted within</div>
+    <div class="seg" role="group" aria-label="Posted within">${POSTED.map(([v, name]) =>
+      `<button type="button" data-set="C.posted_within" data-v="${v}" aria-pressed="${C.posted_within === v}">${name}</button>`).join("")}</div>`;
+}
+function vLocation() {
+  const e = [];
+  if (!C.work_modes.length) e.push(["work_modes", "Pick at least one way of working."]);
+  if (needsCountry() && !C.country.trim()) e.push(["C.country", "Enter your country so we can find on-site and hybrid jobs near you."]);
+  return e;
+}
+const needsCountry = () => C.work_modes.some((m) => m !== "remote");
+
+function rStart() {
+  const rows = searchRows();
+  const err = [...vLevel(), ...vRoles(), ...vLocation()];
+  return `<ul class="summary-list">${rows.map((r) => `<li><span class="tile">${icon(r.icon)}</span>
+      <div><div class="k">${r.k}</div><div class="v ${r.v ? "" : "muted"}">${r.v ? esc(r.v) : "Not set"}</div></div>
+      <button type="button" class="btn ghost" data-go="${r.go}">${icon("pencil")}Edit</button></li>`).join("")}</ul>
+    <div class="section-label">${icon("layers")}Job sites to search</div>
+    <div class="sources">${SOURCES.map((s) => {
+      const blocked = (s.remoteOnly && !C.work_modes.includes("remote")) || (s.country && lc(C.country) !== s.country);
+      const on = C.sources.includes(s.id) && !blocked;
+      const why = s.country && lc(C.country) !== s.country ? "Only for jobs in Bangladesh." : s.remoteOnly && !C.work_modes.includes("remote") ? "Remote jobs only. Turn on Remote to use it." : s.desc;
+      return `<button type="button" class="source" role="switch" aria-checked="${on}" data-toggle="C.sources" data-v="${s.id}" ${blocked ? "disabled" : ""}>
+        <span class="tile">${s.mark}</span><span><b>${s.name}</b><span>${why}</span></span><span class="track" aria-hidden="true"></span></button>`;
+    }).join("")}</div>
+    <div class="start-card">
+      <p><b>${editing() ? "Save your new search" : "Everything's ready"}</b>${err.length ? `${icon("alert")} ${esc(err[0][1])}` : `Takes about ${estimate()} minute${estimate() > 1 ? "s" : ""}. You can browse matches while it runs.`}</p>
+      ${editing() ? `<button type="button" class="btn quiet big" id="save-only" ${err.length ? "disabled" : ""}>Save without searching</button>` : ""}
+      <button type="button" class="btn primary big" id="start" ${err.length ? "disabled" : ""}>${icon("rocket")}${editing() ? "Save and search again" : "Start job search"}</button>
+    </div>`;
+}
+
+function searchRows() {
+  const lv = C.levels.map((l) => LEVELS.find((x) => x.id === l)?.name).filter(Boolean).join(", ");
+  const jt = C.job_types.map((t) => JOB_TYPES.find((x) => x[0] === t)?.[1]).join(", ");
+  return [
+    { icon: "trending", k: "Level", v: [lv, jt].filter(Boolean).join(" · "), go: "search/level" },
+    { icon: "target", k: "Roles", v: C.roles.join(", "), go: "search/roles" },
+    { icon: "tag", k: "Skills to look for", v: C.keywords.join(", "), go: "search/keywords" },
+    { icon: "ban", k: "Words to avoid", v: C.exclude.join(", "), go: "search/keywords" },
+    { icon: "pin", k: "Where", v: whereText(), go: "search/location" },
+    { icon: "clock", k: "Posted within", v: (POSTED.find(([v]) => v === C.posted_within) || POSTED[1])[1], go: "search/location" },
+  ];
+}
+function whereText() {
+  const parts = [];
+  const home = [C.city, C.country].filter(Boolean).join(", ");
+  if (C.work_modes.includes("remote")) parts.push("Remote");
+  const office = C.work_modes.filter((m) => m !== "remote").map((m) => MODES.find((x) => x.id === m).name);
+  if (office.length) parts.push(`${office.join(" or ")}${home ? ` in ${home}` : ""}`);
+  return parts.join(" · ");
+}
+function estimate() {
+  const r = Math.min(C.roles.length, 10) || 1;
+  const remote = C.work_modes.includes("remote"), office = C.work_modes.some((m) => m !== "remote");
+  let s = 0;
+  if (C.sources.includes("linkedin")) s += r * ((office ? 1 : 0) + (remote ? (C.country ? 2 : 1) : 0)) * 2 * 2.4 + r * 10 * 1.9;
+  if (remote && C.sources.includes("remotive")) s += r * 2;
+  if (remote && C.sources.includes("jobicy")) s += r * 2;
+  if (lc(C.country) === "bangladesh" && C.sources.includes("bdjobs")) s += r * 12;
+  return Math.max(1, Math.round(s / 60));
+}
+
+/* ======================================================================
+   Derived data
+   ====================================================================== */
+function spanText(x) {
+  const f = (v) => { const m = /^(\d{4})-(\d{2})/.exec(v || ""); return m ? `${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][+m[2] - 1]} ${m[1]}` : (v || ""); };
+  const end = x.current ? "Present" : f(x.end);
+  return [f(x.start), end].filter(Boolean).join(" – ");
+}
+const allSkills = () => P.skills.flatMap((g) => g.items || []);
+function totalYears() {
+  let months = 0;
+  const now = new Date();
+  for (const e of P.experience) {
+    const s = /^(\d{4})-(\d{2})/.exec(e.start || "");
+    if (!s) continue;
+    const en = e.current ? [now.getFullYear(), now.getMonth() + 1] : (/^(\d{4})-(\d{2})/.exec(e.end || "") || []).slice(1).map(Number);
+    if (!en.length) continue;
+    months += Math.max(0, (en[0] - +s[1]) * 12 + (en[1] - +s[2]));
+  }
+  return months / 12;
+}
+function cvRoles() {
+  const out = [];
+  const add = (t) => { t = (t || "").replace(/\b(senior|sr\.?|junior|jr\.?|lead|intern|trainee)\b/gi, "").replace(/\s+/g, " ").trim(); if (t && !out.some((x) => lc(x) === lc(t)) && !C.roles.some((x) => lc(x) === lc(t))) out.push(t); };
+  add(P.personal.headline);
+  P.experience.slice(0, 3).forEach((e) => add(e.title));
+  return out;
+}
+function guessFields() {
+  const text = lc([P.personal.headline, ...P.experience.map((e) => e.title), ...(C?.roles || []), ...allSkills()].join(" "));
+  const scored = FIELDS.map((f) => [f.id, [...f.roles, ...f.skills].filter((x) => text.includes(lc(x))).length +
+    f.roles.flatMap((r) => r.toLowerCase().split(/\W+/)).filter((w) => w.length > 3 && text.includes(w)).length * .2]);
+  scored.sort((a, b) => b[1] - a[1]);
+  return scored.map((s) => s[0]);
+}
+function autoRegions() {
+  const c = lc(C.country);
+  return c ? Object.keys(REGIONS).filter((r) => REGIONS[r].includes(c)) : [];
+}
+
+function atsCheck() {
+  const me = P.personal;
+  const bullets = [...P.experience, ...P.projects].flatMap((e) => (e.bullets || []).filter((b) => b.trim()));
+  const verbOk = bullets.filter((b) => ACTION_VERBS.has(lc(b.replace(/^[•\-*\s]+/, "").split(/\s+/)[0]).replace(/[^a-z]/g, ""))).length;
+  const nums = bullets.filter((b) => /\d/.test(b)).length;
+  const sw = words(P.summary);
+  const skills = allSkills().length;
+  const hasWork = P.experience.some((e) => e.title) || P.projects.some((x) => x.name);
+  const datesOk = P.experience.filter((e) => e.title).every((e) => e.start && (e.end || e.current));
+  const checks = [
+    { w: 15, ok: !vPersonal().length, label: "Contact details", tip: "Add your name, email, phone and location.", okText: "Name, email, phone and location are all there.", step: "cv/personal" },
+    { w: 5, ok: !!me.linkedin.trim(), label: "LinkedIn profile", tip: "Recruiters usually check it. Add the link if you have one.", okText: "Linked.", step: "cv/personal" },
+    { w: 5, ok: !!me.headline.trim(), label: "Professional title", tip: "Add the job title you're going for under your name.", okText: "Tells ATS what role you're targeting.", step: "cv/personal" },
+    { w: 10, ok: sw >= 30 && sw <= 110, label: "Summary length", tip: sw ? `It's ${sw} words. Aim for 40–90.` : "Add a short summary of 40–90 words.", okText: `${sw} words.`, step: "cv/summary" },
+    { w: 15, ok: hasWork, label: "Experience or projects", tip: "Add at least one job or project.", okText: "Shows what you've done.", step: P.experience.length ? "cv/experience" : "cv/projects" },
+    { w: 5, ok: hasWork && datesOk, label: "Dates on every job", tip: "Add start and end dates (month and year) to each job.", okText: "Consistent month and year format.", step: "cv/experience" },
+    { w: 10, ok: bullets.length > 0 && verbOk / bullets.length >= .7, label: "Action verbs", tip: bullets.length ? `${bullets.length - verbOk} of ${bullets.length} points don't start with a verb like Built, Led or Improved.` : "Describe what you did as bullet points starting with a verb.", okText: "Points start with strong verbs.", step: P.experience.length ? "cv/experience" : "cv/projects" },
+    { w: 10, ok: bullets.length > 0 && nums / bullets.length >= .3, label: "Measurable results", tip: "Add numbers to at least a third of your points (%, users, money, time saved).", okText: `${nums} of ${bullets.length} points include numbers.`, step: P.experience.length ? "cv/experience" : "cv/projects" },
+    { w: 15, ok: skills >= 8, label: "Skills", tip: `You have ${skills}. List at least 8 skills employers ask for.`, okText: `${skills} skills listed.`, step: "cv/skills" },
+    { w: 10, ok: P.education.some((e) => e.degree || e.school), label: "Education", tip: "Add your highest qualification.", okText: "Included.", step: "cv/education" },
+  ];
+  const total = checks.reduce((a, c) => a + c.w, 0);
+  const score = Math.round(checks.filter((c) => c.ok).reduce((a, c) => a + c.w, 0) / total * 100);
+  checks.sort((a, b) => a.ok - b.ok);
+  return { score, checks };
+}
+
+function draftSummary() {
+  const title = P.personal.headline || P.experience[0]?.title || "Professional";
+  const yrs = Math.round(totalYears());
+  const skills = allSkills().slice(0, 4);
+  const edu = P.education[0];
+  const orgs = [...new Set(P.experience.map((e) => e.company).filter(Boolean))].slice(0, 2);
+  let s = yrs >= 1 ? `${title} with ${yrs}+ year${yrs > 1 ? "s" : ""} of experience${orgs.length ? ` at ${orgs.join(" and ")}` : ""}.`
+    : `${title}${edu?.degree ? ` with a ${edu.degree}${edu.school ? ` from ${edu.school}` : ""}` : ""}.`;
+  if (skills.length) s += ` Skilled in ${skills.slice(0, -1).join(", ")}${skills.length > 1 ? " and " : ""}${skills[skills.length - 1]}.`;
+  s += " [Add one sentence on what you do best and a result it delivered, e.g. \"Cut report time by 40%\".]";
+  return s;
+}
+
+/* ======================================================================
+   CV preview (same structure as the PDF/Word file)
+   ====================================================================== */
+function cvSections() {
+  const out = [];
+  const bl = (b) => (b || []).filter((x) => x.trim());
+  if (P.summary.trim()) out.push(["Summary", `<p>${esc(P.summary.trim())}</p>`]);
+  const groups = P.skills.filter((g) => g.items?.length);
+  if (groups.length) out.push(["Skills", groups.map((g) => `<p>${g.group ? `<b>${esc(g.group)}:</b> ` : ""}${esc(g.items.join(", "))}</p>`).join("")]);
+  const entry = (left, left2, right, bullets) => `<div class="e"><div class="e-top"><b>${esc(left)}</b><span>${esc(right)}</span></div>
+    ${left2 ? `<div class="e-sub">${esc(left2)}</div>` : ""}${bullets.length ? `<ul>${bullets.map((b) => `<li>${esc(b.replace(/^[•\-*\s]+/, ""))}</li>`).join("")}</ul>` : ""}</div>`;
+  const exp = P.experience.filter((e) => e.title || e.company);
+  if (exp.length) out.push(["Experience", exp.map((e) => entry(e.title, [e.company, e.location].filter(Boolean).join(", "), spanText(e), bl(e.bullets))).join("")]);
+  const pr = P.projects.filter((x) => x.name);
+  if (pr.length) out.push(["Projects", pr.map((x) => entry(x.name, [x.role, (x.link || "").replace(/^https?:\/\/(www\.)?/, "")].filter(Boolean).join(", "), spanText(x), bl(x.bullets))).join("")]);
+  const ed = P.education.filter((e) => e.degree || e.school);
+  if (ed.length) out.push(["Education", ed.map((e) => entry(e.degree, [e.school, e.location].filter(Boolean).join(", "), spanText(e), (e.details || "").split("\n").filter((x) => x.trim()))).join("")]);
+  const ce = P.certifications.filter((c) => c.name);
+  if (ce.length) out.push(["Certifications", ce.map((c) => entry(c.name, c.issuer, spanText({ start: c.date }), [])).join("")]);
+  const aw = P.awards.filter((a) => a.name);
+  if (aw.length) out.push(["Awards and Activities", aw.map((a) => entry(a.name, a.detail, "", [])).join("")]);
+  const la = P.languages.filter((l) => l.name);
+  if (la.length) out.push(["Languages", `<p>${esc(la.map((l) => l.level ? `${l.name} (${l.level})` : l.name).join(", "))}</p>`]);
+  return out;
+}
+function cvHTML(active) {
+  const me = P.personal;
+  const contact = [me.email, me.phone, me.location, me.linkedin, me.website].filter((x) => x && x.trim()).map((x) => x.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, ""));
+  const act = [].concat(active || []);
+  const secs = cvSections();
+  return `<div class="cv" id="cv">
+    <div class="cv-head ${act.includes("head") ? "is-active" : ""}" data-sec="head">
+      <h2 class="${me.name ? "" : "ph"}">${esc(me.name || "Your Name")}</h2>
+      ${me.headline ? `<div class="cv-title">${esc(me.headline)}</div>` : ""}
+      <div class="cv-contact ${contact.length ? "" : "ph"}">${esc(contact.join(" | ") || "email | phone | city, country")}</div>
+    </div>
+    ${secs.map(([h, body]) => `<section class="${act.includes(h) ? "is-active" : ""}" data-sec="${h}"><h3>${h}</h3>${body}</section>`).join("")}
+    ${act.filter((h) => h !== "head" && !secs.some(([x]) => x === h)).map((h) => `<section class="is-active" data-sec="${h}"><h3>${h}</h3><div class="ph-block" style="width:92%"></div><div class="ph-block" style="width:70%"></div></section>`).join("")}
+    ${!secs.length && !act.length ? `<section><h3 class="ph">Summary</h3><div class="ph-block"></div><div class="ph-block" style="width:80%"></div></section>` : ""}
+  </div>`;
+}
+
+function asideHTML(step) {
+  if (step.phase === "cv") {
+    const a = atsCheck();
+    return `<div class="aside-inner">
+      <div class="aside-head">${ring(a.score)}<div class="t"><b>ATS score</b><span>${a.checks.filter((c) => !c.ok).length ? `${a.checks.filter((c) => !c.ok).length} thing${a.checks.filter((c) => !c.ok).length > 1 ? "s" : ""} to improve` : "Everything checks out"}</span></div>
+        <button type="button" class="icon-btn peek-close" data-act="close-sheet" aria-label="Close preview" style="display:${ui.sheet ? "inline-grid" : "none"}">${icon("x")}</button></div>
+      <div class="paper-wrap"><div class="paper-scroll" id="paper-scroll"><div id="paper-size">${cvHTML(step.section)}</div></div></div>
+    </div>`;
+  }
+  return `<div class="aside-inner"><div class="search-card">
+      <h2><span class="tile">${icon("search")}</span>Your search
+        <button type="button" class="icon-btn" data-act="close-sheet" aria-label="Close" style="margin-left:auto;display:${ui.sheet ? "inline-grid" : "none"}">${icon("x")}</button></h2>
+      ${[["trending", "Level", C.levels.map((l) => LEVELS.find((x) => x.id === l)?.name)],
+         ["target", "Roles", C.roles], ["tag", "Skills to look for", C.keywords], ["ban", "Words to avoid", C.exclude],
+         ["pin", "Where", whereText() ? [whereText()] : []],
+         ["layers", "Sites", C.sources.filter((s) => { const d = SOURCES.find((x) => x.id === s); return d && !(d.remoteOnly && !C.work_modes.includes("remote")) && !(d.country && lc(C.country) !== d.country); }).map((s) => SOURCES.find((x) => x.id === s).name)],
+        ].map(([ic, k, vals]) => `<div class="sc-row"><div class="k">${icon(ic)}${k}</div><div class="v">${vals.length ? vals.slice(0, 12).map((v) => `<span class="pill">${esc(v)}</span>`).join("") + (vals.length > 12 ? `<span class="pill">+${vals.length - 12}</span>` : "") : `<span class="none">Not set yet</span>`}</div></div>`).join("")}
+      ${C.roles.length ? `<div class="estimate">${icon("clock")}A search takes about ${estimate()} minute${estimate() > 1 ? "s" : ""}.</div>` : ""}
+    </div></div>`;
+}
+
+let paperRO;
+function fitPaper() {
+  const scroll = $("paper-scroll"), cv = $("cv"), box = $("paper-size");
+  if (!scroll || !cv) return;
+  const s = scroll.clientWidth / 794;
+  cv.style.transform = `scale(${s})`;
+  box.style.height = cv.offsetHeight * s + "px";
+  box.style.width = scroll.clientWidth + "px";
+}
+function refreshAside(scrollToActive) {
+  const step = STEPS[stepIndex(current)];
+  if (!step) return;
+  const el = document.querySelector(".aside");
+  if (!el) return;
+  const keep = $("paper-scroll")?.scrollTop || 0;
+  el.innerHTML = asideHTML(step);
+  fitPaper();
+  const sc = $("paper-scroll");
+  if (!sc) return;
+  sc.scrollTop = keep;
+  if (scrollToActive) {
+    const a = sc.querySelector(".is-active");
+    if (a) {
+      const s = sc.clientWidth / 794;
+      const top = a.offsetTop * s - 40;
+      sc.scrollTo({ top: Math.max(0, top), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    }
+  }
+}
+
+/* ======================================================================
+   Page rendering + routing
+   ====================================================================== */
+function renderPhases(step) {
+  const phase = step ? step.phase : "welcome";
+  const ph = [["cv", "Your CV", "cv/personal"], ["search", "What you want", "search/level"], ["go", "Search", "search/start"]];
+  const order = { welcome: -1, cv: 0, search: 1 };
+  const pos = step?.id === "start" ? 2 : order[phase];
+  $("phases").innerHTML = ph.map(([k, name, go], i) => {
+    const done = i < pos || (k === "cv" && P.complete) || (k === "search" && C.complete && pos !== 1) ;
+    return `<li><a class="phase ${done && i !== pos ? "done" : ""}" href="#${go}" ${i === pos ? 'aria-current="step"' : ""} style="text-decoration:none">
+      <span class="n">${done && i !== pos ? icon("check") : i + 1}</span><span class="lbl">${name}</span></a></li>`;
+  }).join("");
+  $("to-jobs").hidden = !editing();
+}
+
+function renderRail(step) {
+  const list = STEPS.filter((s) => s.phase === step.phase);
+  const done = list.filter((s) => s.done()).length;
+  return `<div class="rail-inner"><h2>${step.phase === "cv" ? "Build your CV" : "Set up your search"}</h2>
+    <ol>${list.map((s) => {
+      const key = `${s.phase}/${s.id}`;
+      return `<li><a href="#${key}" ${key === current ? 'aria-current="step"' : ""}><span class="st">${icon(s.icon)}</span>${s.label}
+        ${s.done() ? `<span class="ok" aria-label="done">${icon("check")}</span>` : s.optional ? `<span class="opt">Optional</span>` : ""}</a></li>`;
+    }).join("")}</ol>
+    <div class="rail-progress">Step ${list.indexOf(step) + 1} of ${list.length}<div class="meter"><b style="width:${Math.round(done / list.length * 100)}%"></b></div></div></div>`;
+}
+
+function footHTML(step) {
+  const list = STEPS.filter((s) => s.phase === step.phase);
+  const i = list.indexOf(step);
+  const first = i === 0 && step.phase === "cv";
+  let next = "Continue";
+  if (step.phase === "cv" && step.id === "review") next = editing() ? "Done, back to jobs" : "Set up my job search";
+  if (step.optional && !step.done()) next = "Skip for now";
+  if (step.id === "start") return `<div class="foot"><button type="button" class="btn ghost" data-act="back">${icon("left")}Back</button></div>`;
+  return `<div class="foot">
+    ${first ? `<a class="btn ghost" href="#welcome">${icon("left")}Back</a>` : `<button type="button" class="btn ghost" data-act="back">${icon("left")}Back</button>`}
+    <span class="spacer"></span>
+    <button type="button" class="btn quiet peek" data-act="open-sheet">${icon("eye")}${step.phase === "cv" ? "Preview" : "Summary"}</button>
+    <button type="button" class="btn primary" data-act="next">${next}</button></div>`;
+}
+
+function render(animate = true) {
+  const app = $("app");
+  if (current === "welcome") {
+    renderPhases(null);
+    const started = P.personal.name || P.experience.length;
+    app.innerHTML = `<main class="welcome">
+      <div>
+        <h1>Your next job, matched to your CV.</h1>
+        <p class="lead">Build an ATS-friendly CV, tell us the roles and level you want, and Job Hunt searches LinkedIn, Remotive and more. Every match is scored against your skills.</p>
+        <ol class="howto">
+          <li><span class="tile">${icon("file")}<em>1</em></span><div><b>Build your CV</b><span>About 10 minutes. Download it as PDF or Word.</span></div></li>
+          <li><span class="tile">${icon("target")}<em>2</em></span><div><b>Choose what you want</b><span>Level, roles, keywords and where you want to work.</span></div></li>
+          <li><span class="tile">${icon("rocket")}<em>3</em></span><div><b>Start the search</b><span>Matches arrive ranked by how well they fit you.</span></div></li>
+        </ol>
+        <div class="cta-row">
+          <a class="btn primary big" href="#cv/personal">${started ? "Continue my CV" : "Build my CV"}</a>
+          ${P.complete ? `<a class="btn quiet big" href="#search/level">Set up my search</a>` : ""}
+        </div>
+        <p class="privacy">${icon("shield")}<span>Your CV and settings stay on this computer. Only the search terms are sent to job sites.</span></p>
+      </div>
+      <div class="art" aria-hidden="true">
+        <div class="art-paper"><i class="nm"></i><i class="w5"></i><i class="hd"></i><i class="w9"></i><i class="w7"></i><i class="hd"></i><i class="w4"></i><i class="w9"></i><i class="w7"></i><i class="w9"></i><i class="hd"></i><i class="w5"></i><i class="w7"></i></div>
+        <div class="art-cards">
+          ${[["Product Designer", "Remote · Full-time", 92], ["Data Analyst", "Hybrid · Contract", 81], ["Frontend Developer", "On-site · Full-time", 74]].map(([t, s, n], i) =>
+            `<div class="art-card" style="--d:${i}">${ring(n)}<div><b>${t}</b><span>${s}</span></div></div>`).join("")}
+        </div>
+      </div>
+    </main>`;
+    document.title = "Job Hunt Setup";
+    return;
+  }
+  const idx = stepIndex(current);
+  const step = STEPS[idx];
+  const list = STEPS.filter((s) => s.phase === step.phase);
+  renderPhases(step);
+  const back = idx < lastIndex;
+  app.innerHTML = `<div class="shell ${step.id === "review" || step.id === "start" ? "" : ""}">
+      <nav class="rail" aria-label="Steps">${renderRail(step)}</nav>
+      <main class="main">
+        <div class="step ${animate ? "enter" : ""} ${animate && back ? "back" : ""}" id="step">
+          <div class="step-head"><span class="tile">${icon(step.icon)}</span><div>
+            <div class="count">${step.phase === "cv" ? "Your CV" : "Your search"} · Step ${list.indexOf(step) + 1} of ${list.length}</div>
+            <h1 tabindex="-1" id="step-title">${step.title}</h1><p>${step.lead}</p></div></div>
+          <form id="form" novalidate onsubmit="return false">${step.render()}</form>
+        </div>
+        ${footHTML(step)}
+      </main>
+      <aside class="aside" aria-label="${step.phase === "cv" ? "CV preview" : "Search summary"}"></aside>
+    </div>`;
+  refreshAside(true);
+  document.title = `${step.label} · Job Hunt Setup`;
+  if (animate) {
+    window.scrollTo({ top: 0 });
+    $("step-title")?.focus({ preventScroll: true });
+  }
+  lastIndex = idx;
+}
+
+function route() {
+  let h = location.hash.slice(1);
+  if (!h) h = defaultRoute();
+  if (h !== "welcome" && stepIndex(h) < 0) h = defaultRoute();
+  if (h.startsWith("search/") && !criteriaExisted && !C._prefilled) prefillCriteria();
+  current = h;
+  closeSheet();
+  render(true);
+}
+function defaultRoute() {
+  if (!P.complete) return P.personal.name ? "cv/personal" : "welcome";
+  if (!C.complete) return "search/level";
+  return "search/start";
+}
+function go(h) { if (location.hash.slice(1) === h) route(); else location.hash = h; }
+
+function nextStep() {
+  const idx = stepIndex(current);
+  const step = STEPS[idx];
+  const errs = step.validate ? step.validate() : [];
+  if (errs.length) return showErrors(errs);
+  if (step.phase === "cv" && step.id === "review") {
+    const bad = vPersonal();
+    if (bad.length) { go("cv/personal"); setTimeout(() => showErrors(bad), 60); return; }
+    P.complete = true;
+    saveNow("P").then(() => { if (editing()) location.href = "/"; else go("search/level"); });
+    return;
+  }
+  go(`${STEPS[idx + 1].phase}/${STEPS[idx + 1].id}`);
+}
+function prevStep() {
+  const idx = stepIndex(current);
+  go(idx <= 0 ? "welcome" : `${STEPS[idx - 1].phase}/${STEPS[idx - 1].id}`);
+}
+
+function showErrors(errs) {
+  document.querySelectorAll(".err").forEach((e) => { e.hidden = true; e.textContent = ""; });
+  document.querySelectorAll("[aria-invalid]").forEach((e) => e.removeAttribute("aria-invalid"));
+  let first = null;
+  for (const [k, msg] of errs) {
+    const id = k.startsWith("P.") || k.startsWith("C.") ? "f-" + k.replace(/\./g, "-") : null;
+    const errEl = id ? $(id + "-err") : $("err-" + k);
+    const input = id ? $(id) : $("c-C-" + k + "-box") || document.querySelector(`[data-toggle="C.${k}"]`);
+    if (errEl) { errEl.innerHTML = `${icon("alert")}${esc(msg)}`; errEl.hidden = false; }
+    if (input && id) { input.setAttribute("aria-invalid", "true"); input.setAttribute("aria-errormessage", id + "-err"); }
+    if (!first) first = id ? input : (input?.querySelector?.("input") || input);
+  }
+  first?.focus();
+  first?.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
+/* ======================================================================
+   Saving
+   ====================================================================== */
+const timers = {};
+let dirtyCriteria = false;
+function setSave(state) {
+  const el = $("save-state");
+  el.className = "save-state " + (state === "error" ? "err" : state === "dirty" ? "dirty" : "");
+  el.innerHTML = state === "saving" ? `${icon("clock")}<span>Saving</span>`
+    : state === "saved" ? `${icon("check")}<span>Saved</span>`
+    : state === "dirty" ? `${icon("alert")}<span>Unsaved changes</span>`
+    : state === "error" ? `${icon("cloud-off")}<span>Not saved. Is the Job Hunt window still open?</span>` : "";
+}
+function strip(o) { return JSON.parse(JSON.stringify(o, (k, v) => (k.startsWith("_") ? undefined : v))); }
+async function saveNow(which, extra = {}) {
+  clearTimeout(timers[which]);
+  setSave("saving");
+  try {
+    const r = await fetch(which === "P" ? "/api/profile" : "/api/criteria", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...strip(which === "P" ? P : C), ...extra }) });
+    if (!r.ok) throw new Error();
+    if (which === "C") { dirtyCriteria = false; criteriaExisted = true; }
+    setSave("saved");
+    return await r.json();
+  } catch { setSave("error"); return null; }
+}
+function changed(which) {
+  if (which === "C" && C.complete) { dirtyCriteria = true; setSave("dirty"); return; }  // edits apply when you press Save
+  setSave("saving");
+  clearTimeout(timers[which]);
+  timers[which] = setTimeout(() => saveNow(which), 500);
+}
+
+/* ======================================================================
+   Prefill search from CV
+   ====================================================================== */
+function prefillCriteria() {
+  C._prefilled = true;
+  if (!C.roles.length) C.roles = cvRoles().slice(0, 4);
+  if (!C.keywords.length) C.keywords = allSkills().slice(0, 12);
+  const loc = (P.personal.location || "").split(",").map((s) => s.trim()).filter(Boolean);
+  if (!C.country && loc.length) {
+    const last = loc[loc.length - 1];
+    const match = COUNTRIES.find((c) => lc(c) === lc(last));
+    if (match || loc.length > 1) { C.country = match || last; if (loc.length > 1) C.city = loc[0]; }
+  }
+  const y = totalYears();
+  C.levels = !P.experience.length ? ["internship", "entry"] : y < 1 ? ["internship", "entry"] : y < 2.5 ? ["entry", "mid"] : y < 5 ? ["mid"] : y < 8 ? ["mid", "senior"] : ["senior", "lead"];
+  if (lc(C.country) === "bangladesh" && !C.sources.includes("bdjobs")) C.sources.push("bdjobs");
+  changed("C");
+}
+
+/* ======================================================================
+   Events
+   ====================================================================== */
+function newItem(list) {
+  return {
+    experience: { title: "", company: "", location: "", start: "", end: "", current: false, bullets: [] },
+    education: { degree: "", school: "", location: "", start: "", end: "", details: "" },
+    projects: { name: "", role: "", link: "", start: "", end: "", bullets: [] },
+    certifications: { name: "", issuer: "", date: "" },
+    languages: { name: "", level: "Fluent" },
+    awards: { name: "", detail: "" },
+    skills: { group: "", items: [] },
+  }[list];
+}
+function rerender(focusSel) {
+  const y = window.scrollY;
+  const active = focusSel || (document.activeElement?.id ? "#" + CSS.escape(document.activeElement.id) : null);
+  render(false);
+  window.scrollTo({ top: y });
+  if (active) document.querySelector(active)?.focus({ preventScroll: true });
+}
+
+function addChips(k, raw) {
+  const arr = getPath(k);
+  let added = 0;
+  for (const v of String(raw).split(/[,;\n]/).map((s) => s.trim()).filter(Boolean)) {
+    if (!arr.some((x) => lc(x) === lc(v))) { arr.push(v); added++; }
+  }
+  return added;
+}
+
+document.addEventListener("input", (e) => {
+  const t = e.target;
+  const k = t.dataset?.k;
+  if (!k) return;
+  let v = t.type === "checkbox" ? t.checked : t.value;
+  if (t.hasAttribute("data-lines")) v = t.value.split("\n").map((s) => s.trim()).filter(Boolean);
+  setPath(k, v);
+  if (t.getAttribute("aria-invalid")) { t.removeAttribute("aria-invalid"); const er = $(t.id + "-err"); if (er) er.hidden = true; }
+  const which = k[0];
+  changed(which);
+  if (k === "P.summary") {
+    const n = words(P.summary), el = $("sum-count");
+    if (el) { el.className = n === 0 ? "" : n < 30 || n > 100 ? "warn" : "good"; el.textContent = `${n} words · ${n === 0 ? "Aim for 40–90 words" : n < 30 ? "A little short. Aim for 40–90 words" : n <= 100 ? "Good length" : "Too long. Trim to under 100 words"}`; }
+  }
+  const lint = /^P\.(experience|projects)\.(\d+)\.bullets$/.exec(k);
+  if (lint) { const el = document.querySelector(`[data-lint="${lint[1]}.${lint[2]}"]`); if (el) el.innerHTML = bulletLint(P[lint[1]][+lint[2]].bullets); }
+  const summ = /^P\.(experience|education|projects)\.(\d+)\.(title|company|degree|school|name|role|start|end)$/.exec(k);
+  if (summ) {
+    const it = P[summ[1]][+summ[2]];
+    const d = document.querySelector(`details[data-item="${summ[1]}"][data-i="${summ[2]}"] .item-title`);
+    const main = summ[1] === "experience" ? it.title || "New job" : summ[1] === "education" ? it.degree || "New qualification" : it.name || "New project";
+    const sub = [summ[1] === "experience" ? it.company : summ[1] === "education" ? it.school : it.role, spanText(it)].filter(Boolean).join(" · ") || "Fill in the details below";
+    if (d) d.innerHTML = `<b>${esc(main)}</b><span>${esc(sub)}</span>`;
+  }
+  if (k === "C.country") { /* region chips + sources depend on country */ clearTimeout(timers.country); timers.country = setTimeout(() => { if (lc(C.country) === "bangladesh" && !C.sources.includes("bdjobs")) C.sources.push("bdjobs"); rerender(); }, 600); }
+  refreshAside(false);
+  const rail = document.querySelector(".rail");
+  const step = STEPS[stepIndex(current)];
+  if (rail && step) rail.innerHTML = renderRail(step);
+});
+
+document.addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.type === "checkbox" && t.dataset.k) rerender();
+  if (t.tagName === "SELECT" && t.dataset.k) { setPath(t.dataset.k, t.value); changed(t.dataset.k[0]); refreshAside(false); }
+});
+
+document.addEventListener("keydown", (e) => {
+  const t = e.target;
+  if (t.dataset?.chipInput) {
+    const k = t.dataset.chipInput;
+    if ((e.key === "Enter" || e.key === ",") && t.value.trim()) {
+      e.preventDefault();
+      addChips(k, t.value);
+      changed(k[0]);
+      rerender("#" + CSS.escape(t.id));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+    } else if (e.key === "Backspace" && !t.value) {
+      const arr = getPath(k);
+      if (arr.length) { arr.pop(); changed(k[0]); rerender("#" + CSS.escape(t.id)); }
+    }
+    return;
+  }
+  if (e.key === "Escape" && ui.sheet) closeSheet();
+  if (e.key === "Enter" && t.tagName === "INPUT" && t.type !== "checkbox" && t.closest("#form")) { e.preventDefault(); nextStep(); }
+});
+document.addEventListener("paste", (e) => {
+  const t = e.target;
+  if (!t.dataset?.chipInput) return;
+  const text = e.clipboardData.getData("text");
+  if (/[,;\n]/.test(text)) { e.preventDefault(); addChips(t.dataset.chipInput, text); changed(t.dataset.chipInput[0]); rerender("#" + CSS.escape(t.id)); }
+});
+document.addEventListener("focusout", (e) => {
+  // Typed a chip but clicked away without pressing Enter: keep it.
+  const t = e.target;
+  if (t.dataset?.chipInput && t.value.trim()) {
+    const k = t.dataset.chipInput;
+    setTimeout(() => { if (addChips(k, t.value)) { changed(k[0]); rerender(); } }, 120);
+  }
+});
+
+let undoStash = null;
+document.addEventListener("click", (e) => {
+  const box = e.target.closest(".chipbox");
+  if (box && e.target === box) box.querySelector("input")?.focus();
+  const t = e.target.closest("button, a");
+  if (!t) { if (e.target.id === "scrim") closeSheet(); return; }
+  const d = t.dataset;
+
+  if (d.chipDel !== undefined) {
+    const k = t.closest("[data-chips]").dataset.chips;
+    const arr = getPath(k);
+    const [gone] = arr.splice(+d.chipDel, 1);
+    changed(k[0]);
+    rerender("#" + CSS.escape(t.closest("[data-chips]").querySelector("input").id));
+    toast(`Removed "${gone}"`, () => { arr.splice(+d.chipDel, 0, gone); changed(k[0]); rerender(); });
+  } else if (d.chipAdd) {
+    addChips(d.chipAdd, d.v); changed(d.chipAdd[0]); rerender();
+  } else if (d.add) {
+    e.preventDefault();
+    const list = P[d.add];
+    if (["experience", "education", "projects"].includes(d.add)) list.forEach((x) => (x._open = false));
+    list.push(newItem(d.add));
+    if (d.add === "skills" && list.length === 2 && !list[0].group) { list[0].group = "Technical"; list[1].group = "Soft skills"; }
+    changed("P");
+    rerender();
+    const first = document.querySelectorAll(`[data-k^="P.${d.add}.${list.length - 1}."]`)[0];
+    first?.focus(); first?.scrollIntoView({ block: "center", behavior: "smooth" });
+  } else if (d.del) {
+    e.preventDefault(); e.stopPropagation();
+    const list = P[d.del], i = +d.i;
+    const [gone] = list.splice(i, 1);
+    if (d.del === "skills" && !list.length) list.push(newItem("skills"));
+    if (d.del === "skills" && list.length === 1 && list[0].group === "Technical") list[0].group = "";
+    changed("P"); rerender();
+    toast("Deleted", () => { list.splice(i, 0, gone); changed("P"); rerender(); });
+  } else if (d.move) {
+    e.preventDefault(); e.stopPropagation();
+    const list = P[d.move], i = +d.i, j = i + +d.d;
+    [list[i], list[j]] = [list[j], list[i]];
+    changed("P"); rerender();
+  } else if (d.toggle) {
+    const arr = getPath(d.toggle);
+    const i = arr.indexOf(d.v);
+    i < 0 ? arr.push(d.v) : arr.splice(i, 1);
+    if (d.toggle === "C.levels" && i < 0 && !C.levels.length) C.levels = [d.v];
+    changed("C"); rerender();
+  } else if (d.set) {
+    setPath(d.set, isNaN(+d.v) ? d.v : +d.v); changed(d.set[0]); rerender();
+  } else if (d.field) {
+    ui.field = d.field; rerender();
+  } else if (d.go) {
+    go(d.go);
+  } else if (d.act === "next") nextStep();
+  else if (d.act === "back") prevStep();
+  else if (d.act === "open-sheet") openSheet();
+  else if (d.act === "close-sheet") closeSheet();
+  else if (t.id === "draft-summary") {
+    undoStash = P.summary;
+    P.summary = draftSummary();
+    changed("P"); rerender("#f-P-summary");
+    const ta = $("f-P-summary");
+    const s = P.summary.indexOf("["); if (ta && s >= 0) ta.setSelectionRange(s, P.summary.length);
+    toast("Draft added. Replace the part in brackets.", () => { P.summary = undoStash; changed("P"); rerender(); });
+  } else if (t.id === "start" || t.id === "save-only") startSearch(t.id === "start", t);
+  else if (t.id === "toast-undo") { const f = toastUndo; hideToast(); f?.(); }
+  else if (t.id === "to-jobs" && dirtyCriteria && !confirm("You have unsaved search changes. Leave without saving them?")) e.preventDefault();
+});
+document.addEventListener("toggle", (e) => {
+  const d = e.target;
+  if (d.matches?.("details.item")) { const it = P[d.dataset.item]?.[+d.dataset.i]; if (it) it._open = d.open; }
+}, true);
+
+async function startSearch(run, btn) {
+  const errs = [...vLevel(), ...vRoles(), ...vLocation()];
+  if (errs.length) return;
+  btn.disabled = true;
+  btn.innerHTML = `${icon("clock").replace('class="i"', 'class="i spin"')}${run ? "Starting" : "Saving"}`;
+  C.complete = true;
+  C.sources = C.sources.filter((s) => { const d = SOURCES.find((x) => x.id === s); return !(d.country && lc(C.country) !== d.country); });
+  const res = await saveNow("C", { apply: true });
+  if (!res) { btn.disabled = false; btn.textContent = "Try again"; return; }
+  if (run) await fetch("/api/scrape", { method: "POST" }).catch(() => {});
+  location.href = "/";
+}
+
+/* Sheet (preview on small screens) */
+function openSheet() { ui.sheet = true; document.body.classList.add("sheet-open"); refreshAside(true); }
+function closeSheet() { if (!ui.sheet) return; ui.sheet = false; document.body.classList.remove("sheet-open"); refreshAside(false); }
+
+/* Toast with undo */
+let toastTimer, toastUndo;
+function toast(msg, undo) {
+  $("toast-msg").textContent = msg;
+  toastUndo = undo;
+  $("toast-undo").hidden = !undo;
+  $("toast").classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, 5000);
+}
+function hideToast() { $("toast").classList.remove("show"); toastUndo = null; }
+
+window.addEventListener("resize", fitPaper);
+window.addEventListener("hashchange", route);
+window.addEventListener("beforeunload", (e) => { if (dirtyCriteria) { e.preventDefault(); e.returnValue = ""; } });
+
+/* ======================================================================
+   Boot
+   ====================================================================== */
+(async function boot() {
+  let s;
+  try { s = await (await fetch("/api/state")).json(); }
+  catch { $("app").innerHTML = `<main class="welcome"><div><h1>Job Hunt isn't running.</h1><p class="lead">Double-click "Start Job Hunt.bat" to start it, then refresh this page.</p></div></main>`; return; }
+  DEF = s.defaults;
+  P = Object.assign(clone(DEF.profile), s.profile || {});
+  P.personal = Object.assign(clone(DEF.profile.personal), P.personal || {});
+  if (!P.skills.length) P.skills = [{ group: "", items: [] }];
+  [P.experience, P.education, P.projects].forEach((l) => l.length > 1 && l.forEach((x) => (x._open = false)));
+  criteriaExisted = !!s.criteria;
+  C = Object.assign(clone(DEF.criteria), s.criteria || {});
+  route();
+})();
+</script>
+</body>
+</html>
